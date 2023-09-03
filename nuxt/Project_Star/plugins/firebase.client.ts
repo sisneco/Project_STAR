@@ -1,7 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin((nuxtApp) => {
   const firebaseConfig = {
     apiKey: "AIzaSyCIAUVKQr-dgJheuaQdQyRbnS4at9JPm-c",
     authDomain: "wh-star.firebaseapp.com",
@@ -13,4 +13,10 @@ export default defineNuxtPlugin(() => {
   };
 
   firebase.initializeApp(firebaseConfig);
+
+  const auth = firebase.auth();
+
+  nuxtApp.provide("auth", auth);
+
+  nuxtApp.provide("firebase", firebase);
 });
