@@ -24,7 +24,7 @@ module.exports = {
         },
         "slide-bottom": {
           "0%": {
-            transform: "translateY(-20px)",
+            transform: "translateY(-100px)",
           },
           to: {
             transform: "translateY(0px)",
@@ -92,7 +92,7 @@ module.exports = {
         "slide-top":
           "slide-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both",
         "slide-bottom":
-          "slide-bottom 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both",
+          "slide-bottom 1.2s cubic-bezier(0.250, 0.460, 0.450, 0.940)   both",
       },
     },
   },
