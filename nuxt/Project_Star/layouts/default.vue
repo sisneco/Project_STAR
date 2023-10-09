@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <main>
+  <main class="min-h-screen font-notojp">
     <slot />
   </main>
   <Footer />
