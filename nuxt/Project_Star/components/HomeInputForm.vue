@@ -16,6 +16,8 @@ const INPUT_TYPE_TEXT = "text";
 const INPUT_TYPE_NUMBER = "number";
 // textarea
 const INPUT_TYPE_TEXTAREA = "textarea";
+// star
+const INPUT_TYPE_STAR = "star";
 
 const formArray: Array<Form> = new Array();
 
@@ -45,7 +47,7 @@ formArray.push(
   new Form("price", "値段はどれぐらいになりそうですか？", INPUT_TYPE_NUMBER)
 );
 formArray.push(
-  new Form("priority", "優先度はどうでしょうか？", INPUT_TYPE_TEXT)
+  new Form("priority", "優先度はどうでしょうか？", INPUT_TYPE_STAR)
 );
 formArray.push(
   new Form(
@@ -89,8 +91,6 @@ function autoResizeTextArea(event: Event) {
   // 基準値が設定されていない場合 -> 設定
   if (HEIGHT_WRAPPER_TEXTAREA === null) {
     HEIGHT_WRAPPER_TEXTAREA = wrapperFormEl.clientHeight;
-
-    console.log(wrapperTextareaEl.clientHeight);
   }
 
   wrapperTextareaEl.style.height =
@@ -152,16 +152,21 @@ function btnCommonFormAction(isNext: boolean) {
   currentForm.value = formArray[index];
   inputText.value = currentForm.value.value;
 
-  // 非同期処理を利用して、フォーカスを当てる（JSはシングルスレッドのため、本メソッド終了後にタイムアウト処理が実行する）
-  window.setTimeout(() => {
-    document.getElementById(currentForm.value.inputType)?.focus();
-  }, 1);
-
   // ボタンテキストを更新
   btnText.value = index === formArray.length - 1 ? "登録" : "次へ";
 
   // フォーカスを当てる
   autoInputFocus();
+
+  // 個別処理[星]のパラメータが設定されている場合 -> 初期設定をする
+  if (
+    currentForm.value.inputType === INPUT_TYPE_STAR &&
+    currentForm.value.value !== ""
+  ) {
+    nextTick(() => {
+      clickRatingStar(Number.parseInt(currentForm.value.value));
+    });
+  }
 }
 
 function btnOpenModalAction() {
@@ -180,12 +185,26 @@ function btnCommonModalAction() {
 }
 
 /**
- *  非同期処理を利用して、フォーカスを当てる（JSはシングルスレッドのため、本メソッド終了後にタイムアウト処理が実行する）
+ *  非同期処理を利用して、フォーカスを当てる
  */
 function autoInputFocus() {
-  window.setTimeout(() => {
+  nextTick(() => {
     document.getElementById(currentForm.value.inputType)?.focus();
-  }, 1);
+  });
+}
+
+function clickRatingStar(n: number) {
+  for (let i = 0; i <= 5; i++) {
+    const color: string = i <= n ? "yellow" : "gray";
+
+    const el: HTMLElement | null = document.getElementById("rate" + i);
+
+    if (el !== null) {
+      el.style.color = color;
+    }
+
+    inputText.value = n;
+  }
 }
 
 // computed
@@ -241,6 +260,24 @@ const nowFormArrayIndex = computed(() => {
         class="w-full outline-none text-xl"
         v-else-if="currentForm.inputType === INPUT_TYPE_TEXT"
       />
+      <div
+        id="star"
+        class="flex flex-col h-full"
+        v-else-if="currentForm.inputType === INPUT_TYPE_STAR"
+      >
+        <span class="text-xl text-gray-400">{{
+          currentForm.placeholderText
+        }}</span>
+        <div class="flex items-center">
+          <span
+            v-for="n in 5"
+            :id="'rate' + n"
+            @click="clickRatingStar(n)"
+            class="text-gray-400 text-4xl cursor-pointer"
+            >★</span
+          >
+        </div>
+      </div>
     </div>
     <div
       class="w-full rounded-full h-1/2 py-8 lg:py-0 lg:h-[45px] flex justify-end gap-x-2 pr-4 text-white font-bold font-sans"
@@ -255,7 +292,7 @@ const nowFormArrayIndex = computed(() => {
       <button
         class="bg-blue-500 w-32 rounded-full h-[45px] p-2 text-white font-bold font-sans"
         @click="btnNextAction()"
-        :class="{ 'bg-blue-400 pointer-events-none': inputText === '' }"
+        :class="{ 'bg-blue-300 pointer-events-none': inputText == '' }"
       >
         {{ btnText }}
       </button>
