@@ -283,7 +283,7 @@ const nowFormArrayIndex = computed(() => {
       class="w-full rounded-full h-1/2 py-8 lg:py-0 lg:h-[45px] flex justify-end gap-x-2 pr-4 text-white font-bold font-sans"
     >
       <button
-        class="w-32 rounded-full p-2 h-[45px] text-gray-600 font-bold font-sans border border-gray-600"
+        class="w-32 p-2 h-[45px] rounded-full text-blue-500 font-bold font-sans border border-blue-500"
         @click="btnBackAction()"
         v-if="isShowBtnBack"
       >
@@ -292,7 +292,10 @@ const nowFormArrayIndex = computed(() => {
       <button
         class="bg-blue-500 w-32 rounded-full h-[45px] p-2 text-white font-bold font-sans"
         @click="btnNextAction()"
-        :class="{ 'bg-blue-300 pointer-events-none': inputText == '' }"
+        :class="{
+          'bg-blue-400 pointer-events-none': inputText == '',
+          'bg-blue-500': inputText != '',
+        }"
       >
         {{ btnText }}
       </button>
