@@ -98,7 +98,7 @@ function canClickLoginButton() {
 
 <template>
   <div
-    class="flex p-8 md:p-12 lg:p-20 lg:justify-between bg-img flex-col gap-y-8 lg:flex-row min-h-screen items-center lg:items-start"
+    class="flex p-8 md:p-12 lg:p-20 lg:justify-between flex-col gap-y-8 lg:flex-row min-h-screen items-center lg:items-start"
   >
     <section class="flex flex-col gap-y-4 font-notojp pb-4 md:pb-0">
       <h1
@@ -166,11 +166,6 @@ function canClickLoginButton() {
 </template>
 
 <style scoped>
-.bg-img {
-  background-image: url("~/assets/img/test.jpg");
-  background-size: cover;
-}
-
 @media (min-width: 768px) {
   .google {
     --tw-scale-x: 1.5;
