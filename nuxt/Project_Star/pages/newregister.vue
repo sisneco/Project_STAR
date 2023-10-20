@@ -1,15 +1,4 @@
-<script setup>
-//values
-const nuxtApp = useNuxtApp();
-
-const currentForm = new nuxtApp.$form(
-  "name",
-  "名前を入力してください！",
-  "text"
-);
-
-nuxtApp.$form;
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div
@@ -19,14 +8,20 @@ nuxtApp.$form;
       class="w-full md:min-w-[400px] max-w-[550px] h-[600px] md:h-[750px] bg-white rounded-lg px-8 py-4 md:py-12 font-notojp flex flex-col gap-y-8"
     >
       <h2 class="text-4xl md:text-5xl font-oswald">INITIALIZE</h2>
-      <label class="text-lg">{{ currentForm.placeholderText }}</label>
+      <div class="flex flex-col gap-y-4">
+        <label class="text-lg"
+          >IDを入力してください
+          <p class="text-sm text-red-500">※半角4文字～8文字の半角英数字</p>
+        </label>
+      </div>
       <input
         type="text"
         id="tex1"
         autocomplete="off"
+        placeholder="whastar"
         class="w-full outline-none text-lg border p-4"
       />
-      <label class="text-lg">test</label>
+      <label class="text-lg">名前を入力してください</label>
       <input
         type="text"
         id="text2"

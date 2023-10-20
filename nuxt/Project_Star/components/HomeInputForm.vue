@@ -84,18 +84,13 @@ function autoResizeTextArea(event: Event) {
   // 1つ目の改行はカウントしない
   let cnt: number = countParamNewLine(text);
 
-  if (cnt === 1) {
-    cnt = 0;
-  }
-
   // 基準値が設定されていない場合 -> 設定
   if (HEIGHT_WRAPPER_TEXTAREA === null) {
-    HEIGHT_WRAPPER_TEXTAREA = wrapperFormEl.clientHeight;
+    HEIGHT_WRAPPER_TEXTAREA = wrapperTextareaEl.clientHeight;
   }
 
-  wrapperTextareaEl.style.height =
-    (HEIGHT_WRAPPER_TEXTAREA * 2) / 3 + cnt * 25 + "px";
-  wrapperFormEl.style.height = HEIGHT_WRAPPER_TEXTAREA + cnt * 25 + "px";
+  textareaEl.style.height = (HEIGHT_WRAPPER_TEXTAREA * 1) / 2 + cnt * 25 + "px";
+  wrapperTextareaEl.style.height = HEIGHT_WRAPPER_TEXTAREA + cnt * 25 + "px";
 }
 
 /**
@@ -228,7 +223,7 @@ const nowFormArrayIndex = computed(() => {
     id="wrapper-textarea"
     :class="{ hidden: !isModalVisible }"
   >
-    <div class="w-full h-1/2 lg:h-[100px] p-4 flex flex-col gap-y-4">
+    <div class="w-full h-1/2 lg:h-[60px] p-4 flex flex-col gap-y-4">
       <span
         class="lg:hidden hover:"
         :class="{ hidden: !isModalVisible }"
@@ -268,7 +263,7 @@ const nowFormArrayIndex = computed(() => {
         <span class="text-xl text-gray-400">{{
           currentForm.placeholderText
         }}</span>
-        <div class="flex items-center">
+        <div class="flex items-center z-10 w-fit">
           <span
             v-for="n in 5"
             :id="'rate' + n"
@@ -280,7 +275,7 @@ const nowFormArrayIndex = computed(() => {
       </div>
     </div>
     <div
-      class="w-full rounded-full h-1/2 py-8 lg:py-0 lg:h-[45px] flex justify-end gap-x-2 pr-4 text-white font-bold font-sans"
+      class="w-full rounded-full h-1/2 py-8 lg:py-0 lg:h-[50px] flex justify-end gap-x-2 pr-4 text-white font-bold font-sans"
     >
       <button
         class="w-32 p-2 h-[45px] rounded-full text-blue-500 font-bold font-sans border border-blue-500"
