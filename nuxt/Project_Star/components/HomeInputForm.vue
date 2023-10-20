@@ -27,11 +27,18 @@ class Form {
   placeholderText: string;
   value: string;
   inputType: string;
+  labelText: string;
 
-  constructor(key: string, placeholder: string, inputType: string) {
+  constructor(
+    key: string,
+    placeholder: string,
+    inputType: string,
+    labelText: string
+  ) {
     this.key = key;
     this.placeholderText = placeholder;
     this.inputType = inputType;
+    this.labelText = labelText;
 
     // valueのみ空白で初期化
     this.value = "";
@@ -39,21 +46,32 @@ class Form {
 }
 
 const currentForm: Ref<Form> = ref(
-  new Form("wantItem", "今欲しいものを書き込んでみましょう！", INPUT_TYPE_TEXT)
+  new Form(
+    "wantItem",
+    "今欲しいものを書き込んでみましょう！",
+    INPUT_TYPE_TEXT,
+    "欲しいもの"
+  )
 );
 
 formArray.push(currentForm.value);
 formArray.push(
-  new Form("price", "値段はどれぐらいになりそうですか？", INPUT_TYPE_NUMBER)
+  new Form(
+    "price",
+    "値段はどれぐらいになりそうですか？",
+    INPUT_TYPE_NUMBER,
+    "金額"
+  )
 );
 formArray.push(
-  new Form("priority", "優先度はどうでしょうか？", INPUT_TYPE_STAR)
+  new Form("priority", "優先度はどうでしょうか？", INPUT_TYPE_STAR, "優先度")
 );
 formArray.push(
   new Form(
     "memo",
     "なにか要望などがあれば書いてみましょう！",
-    INPUT_TYPE_TEXTAREA
+    INPUT_TYPE_TEXTAREA,
+    "要望など"
   )
 );
 
@@ -219,11 +237,39 @@ const nowFormArrayIndex = computed(() => {
 
 <template>
   <div
-    class="fixed w-screen h-screen lg:w-full lg:h-auto top-0 lg:flex flex-col lg:sticky bg-white border-b border-gray-200 pb-2"
+    class="fixed w-screen h-screen lg:w-full lg:h-auto top-0 lg:flex flex-col lg:sticky bg-white border-b border-gray-200 p-4"
     id="wrapper-textarea"
     :class="{ hidden: !isModalVisible }"
   >
-    <div class="w-full h-1/2 lg:h-[60px] p-4 flex flex-col gap-y-4">
+    <div
+      class="w-full h-1/2 py-2 lg:py-0 lg:h-[50px] flex justify-end gap-x-2 pr-4 text-white font-bold font-sans items-center"
+    >
+      <label class="text-lg text-gray-500 mr-auto">{{
+        currentForm.labelText
+      }}</label>
+      <p>1/5</p>
+      <button
+        class="w-32 p-2 h-[45px] rounded-full text-blue-500 font-bold font-sans border border-blue-500"
+        @click="btnBackAction()"
+        v-if="isShowBtnBack"
+      >
+        戻る
+      </button>
+      <button
+        class="bg-blue-500 w-32 rounded-full h-[45px] p-2 text-white font-bold font-sans"
+        @click="btnNextAction()"
+        :class="{
+          'bg-blue-400 pointer-events-none': inputText == '',
+          'bg-blue-500': inputText != '',
+        }"
+      >
+        {{ btnText }}
+      </button>
+    </div>
+
+    <div
+      class="w-full h-1/2 lg:h-[60px] flex flex-col gap-y-4 items-center justify-center"
+    >
       <span
         class="lg:hidden hover:"
         :class="{ hidden: !isModalVisible }"
@@ -273,27 +319,6 @@ const nowFormArrayIndex = computed(() => {
           >
         </div>
       </div>
-    </div>
-    <div
-      class="w-full rounded-full h-1/2 py-8 lg:py-0 lg:h-[50px] flex justify-end gap-x-2 pr-4 text-white font-bold font-sans"
-    >
-      <button
-        class="w-32 p-2 h-[45px] rounded-full text-blue-500 font-bold font-sans border border-blue-500"
-        @click="btnBackAction()"
-        v-if="isShowBtnBack"
-      >
-        戻る
-      </button>
-      <button
-        class="bg-blue-500 w-32 rounded-full h-[45px] p-2 text-white font-bold font-sans"
-        @click="btnNextAction()"
-        :class="{
-          'bg-blue-400 pointer-events-none': inputText == '',
-          'bg-blue-500': inputText != '',
-        }"
-      >
-        {{ btnText }}
-      </button>
     </div>
   </div>
 
