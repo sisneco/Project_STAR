@@ -221,14 +221,6 @@ function clickRatingStar(n: number) {
 }
 
 // computed
-const isShowBtnBack = computed(() => {
-  /** 添字(一番初め) */
-  const FIRST_INDEX: number = 0;
-
-  return (
-    formArray.findIndex((v) => v.key === currentForm.value.key) !== FIRST_INDEX
-  );
-});
 
 const nowFormArrayIndex = computed(() => {
   return formArray.findIndex((v) => v.key === currentForm.value.key);
@@ -237,26 +229,26 @@ const nowFormArrayIndex = computed(() => {
 
 <template>
   <div
-    class="fixed w-screen h-screen lg:w-full lg:h-auto top-0 lg:flex flex-col lg:sticky bg-white border-b border-gray-200 p-4"
+    class="fixed w-screen h-screen lg:w-full lg:h-[150px] top-0 lg:flex flex-col lg:sticky bg-white border-b border-gray-200 p-4 gap-y-4"
     id="wrapper-textarea"
     :class="{ hidden: !isModalVisible }"
   >
     <div
-      class="w-full h-1/2 py-2 lg:py-0 lg:h-[50px] flex justify-end gap-x-2 pr-4 text-white font-bold font-sans items-center"
+      class="w-full h-1/2 py-2 lg:py-0 flex justify-end gap-x-2 pr-4 text-white font-bold font-sans items-center border-b pb-4"
     >
-      <label class="text-lg text-gray-500 mr-auto">{{
-        currentForm.labelText
-      }}</label>
-      <p>1/5</p>
+      <div class="mr-auto flex text-gray-500 items-center">
+        <span>項目：</span>
+        <label class="text-lg">{{ currentForm.labelText }}</label>
+        <p>項目数： {{ nowFormArrayIndex + 1 }} /{{ formArray.length }}</p>
+      </div>
       <button
-        class="w-32 p-2 h-[45px] rounded-full text-blue-500 font-bold font-sans border border-blue-500"
+        class="w-32 p-2 rounded-full text-blue-500 font-bold font-sans border border-blue-500"
         @click="btnBackAction()"
-        v-if="isShowBtnBack"
       >
         戻る
       </button>
       <button
-        class="bg-blue-500 w-32 rounded-full h-[45px] p-2 text-white font-bold font-sans"
+        class="w-32 rounded-full p-2 text-white font-bold font-sans"
         @click="btnNextAction()"
         :class="{
           'bg-blue-400 pointer-events-none': inputText == '',
@@ -267,9 +259,7 @@ const nowFormArrayIndex = computed(() => {
       </button>
     </div>
 
-    <div
-      class="w-full h-1/2 lg:h-[60px] flex flex-col gap-y-4 items-center justify-center"
-    >
+    <div class="w-full h-1/2 flex flex-col gap-y-4 items-start justify-center">
       <span
         class="lg:hidden hover:"
         :class="{ hidden: !isModalVisible }"
@@ -306,9 +296,6 @@ const nowFormArrayIndex = computed(() => {
         class="flex flex-col h-full"
         v-else-if="currentForm.inputType === INPUT_TYPE_STAR"
       >
-        <span class="text-xl text-gray-400">{{
-          currentForm.placeholderText
-        }}</span>
         <div class="flex items-center z-10 w-fit">
           <span
             v-for="n in 5"
