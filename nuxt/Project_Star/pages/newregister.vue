@@ -1,9 +1,16 @@
 <script setup lang="ts">
 // CONST
+/** ページタグ：フォーム（テキストフィールド）表示 */
 const PAGE_TAG_INPUT_INITALIZE_DATA = 1;
+/** ページタグ：フォーム挿入要素確認 */
+const PAGE_TAG_CONFIRM_INITALIZE_DATA = 2;
 
 // VALUES
 const pageTag: Ref<number> = ref(PAGE_TAG_INPUT_INITALIZE_DATA);
+
+// form parameter
+const userId: Ref<string> = ref("");
+const userName: Ref<string> = ref("");
 
 // METHODS
 function btnNextAction() {
@@ -32,6 +39,7 @@ function btnNextAction() {
           id="tex1"
           autocomplete="off"
           placeholder="whastar"
+          v-model="userId"
           class="w-full outline-none text-lg border p-4"
         />
         <div class="flex flex-col">
@@ -43,8 +51,14 @@ function btnNextAction() {
           id="text2"
           autocomplete="off"
           placeholder="ほわすた"
+          v-model="userName"
           class="w-full outline-none text-lg border p-4"
         />
+      </div>
+
+      <div v-else-if="pageTag === PAGE_TAG_CONFIRM_INITALIZE_DATA">
+        <p>{{ userId }}</p>
+        <p>{{ userName }}</p>
       </div>
 
       <button
@@ -56,6 +70,7 @@ function btnNextAction() {
 
       <button
         class="w-full text-lg md:text-2xl h-12 md:h-16 rounded-md font-bold p-2 text-blue-500 border border-blue-500"
+        v-if="pageTag !== PAGE_TAG_INPUT_INITALIZE_DATA"
       >
         戻る
       </button>
