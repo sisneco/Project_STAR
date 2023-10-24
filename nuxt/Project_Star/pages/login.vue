@@ -1,11 +1,11 @@
 <script setup>
-// LifeCicle
+// LIFECYCLE
 onMounted(() => {
   // RUN ====>
   createFirebaseUI();
 });
 
-// Values
+// VALUES
 const email = ref();
 const password = ref();
 
@@ -15,7 +15,7 @@ const goLoginErrorAnimation = ref(false);
 const nuxtApp = useNuxtApp();
 const firebase = nuxtApp.$firebase;
 
-// methods
+// METHODS
 
 /**
  * FirebaseUIのコンテナを作成するメソッド
