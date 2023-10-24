@@ -1,11 +1,11 @@
 <script setup lang="ts">
-// values
+// VALUES
 const inputText: Ref = ref("");
 const btnText: Ref = ref("次へ");
 
 const isModalVisible: Ref = ref(false);
 
-// 定数
+// CONST
 /** textAreaの自動サイズ調整用の高さ */
 let HEIGHT_WRAPPER_TEXTAREA: any = null;
 
@@ -75,7 +75,7 @@ formArray.push(
   )
 );
 
-// methods
+// METHODS
 /**
  * textareaを自動的にリサイズする
  * 改行コードの数と係数を掛けることで値を設定する
@@ -220,7 +220,7 @@ function clickRatingStar(n: number) {
   }
 }
 
-// computed
+// COMPUTED
 
 const nowFormArrayIndex = computed(() => {
   return formArray.findIndex((v) => v.key === currentForm.value.key);
@@ -251,7 +251,7 @@ const nowFormArrayIndex = computed(() => {
         class="w-32 rounded-full p-2 text-white font-bold font-sans"
         @click="btnNextAction()"
         :class="{
-          'bg-blue-400 pointer-events-none': inputText == '',
+          'bg-blue-300 pointer-events-none': inputText == '',
           'bg-blue-500': inputText != '',
         }"
       >

@@ -1,14 +1,81 @@
 <script setup lang="ts">
 // CONST
+/** ページタグ：フォーム（テキストフィールド）表示 */
 const PAGE_TAG_INPUT_INITALIZE_DATA = 1;
+/** ページタグ：フォーム挿入要素確認 */
+const PAGE_TAG_CONFIRM_INITALIZE_DATA = 2;
 
 // VALUES
 const pageTag: Ref<number> = ref(PAGE_TAG_INPUT_INITALIZE_DATA);
 
+// form parameter
+const userId: Ref<string> = ref("");
+const userName: Ref<string> = ref("");
+
 // METHODS
 function btnNextAction() {
+  //TODO 同一ユーザーID確認処理
+
   ++pageTag.value;
 }
+
+/**
+ * フォームボタン活性条件のラッパーメソッド
+ * @returns true:非活性 false:活性
+ */
+function isDisabledFormButton(): boolean {
+  return hasValidErrorUserId() || hasValidErrorUserName();
+}
+
+/**
+ * バリデーションチェック[ユーザーID]
+ *  @returns true:エラー false:正常
+ */
+function hasValidErrorUserId(): boolean {
+  const target: string = userId.value;
+  console.log(target);
+
+  // 1. 空白チェック
+  if (target === "") {
+    return true;
+  }
+
+  // 2. 範囲チェック
+  if (target.length < 4 || 8 < target.length) {
+    return true;
+  }
+
+  //TODO 3. 英数字チェック（正規表現？）
+
+  return false;
+}
+
+/**
+ * バリデーションチェック[ユーザー名]
+ *  @returns true:エラー false:正常
+ */
+function hasValidErrorUserName() {
+  const target: string = userName.value;
+
+  console.log(target);
+
+  if (target === "") {
+    return true;
+  }
+
+  if (10 < target.length) {
+    return true;
+  }
+
+  return false;
+}
+
+// COMPUTED
+const formColumnText = computed(() => {
+  return pageTag.value === PAGE_TAG_INPUT_INITALIZE_DATA
+    ? "INITIALIZE"
+    : "CONFIRM";
+});
 </script>
 
 <template>
@@ -18,44 +85,61 @@ function btnNextAction() {
     <form
       class="w-full md:min-w-[400px] max-w-[550px] h-[600px] md:h-[750px] bg-white rounded-lg px-8 py-4 md:py-12 font-notojp flex flex-col gap-y-4"
     >
-      <h2 class="text-4xl md:text-5xl font-oswald">INITIALIZE</h2>
-      <div
-        class="flex gap-y-4 flex-col"
-        v-if="pageTag === PAGE_TAG_INPUT_INITALIZE_DATA"
-      >
-        <div class="flex flex-col">
-          <label class="text-lg">IDを入力してください </label>
-          <p class="text-sm text-red-500">※半角4文字～8文字の半角英数字</p>
-        </div>
-        <input
-          type="text"
-          id="tex1"
-          autocomplete="off"
-          placeholder="whastar"
-          class="w-full outline-none text-lg border p-4"
-        />
-        <div class="flex flex-col">
-          <label class="text-lg">名前を入力してください </label>
-          <p class="text-sm text-red-500">※名前は後からでも変更できます</p>
-        </div>
-        <input
-          type="text"
-          id="text2"
-          autocomplete="off"
-          placeholder="ほわすた"
-          class="w-full outline-none text-lg border p-4"
-        />
+      <h2 class="text-4xl md:text-5xl font-oswald">{{ formColumnText }}</h2>
+      <div class="flex flex-col">
+        <label class="text-lg">ID </label>
+        <p class="text-sm text-red-500">※半角4文字～8文字の半角英数字</p>
       </div>
+      <input
+        type="text"
+        id="tex1"
+        autocomplete="off"
+        placeholder="whastar"
+        v-model="userId"
+        class="w-full outline-none text-lg border p-4"
+        v-if="pageTag == PAGE_TAG_INPUT_INITALIZE_DATA"
+      />
+      <p
+        class="w-full text-lg p-4 bg-gray-100 text-gray-500"
+        v-else-if="pageTag === PAGE_TAG_CONFIRM_INITALIZE_DATA"
+      >
+        {{ userId }}
+      </p>
+      <div class="flex flex-col">
+        <label class="text-lg">名前 </label>
+        <p class="text-sm text-red-500">※名前は後からでも変更できます</p>
+      </div>
+      <input
+        type="text"
+        id="text2"
+        autocomplete="off"
+        placeholder="ほわすた"
+        v-model="userName"
+        class="w-full outline-none text-lg border p-4"
+        v-if="pageTag === PAGE_TAG_INPUT_INITALIZE_DATA"
+      />
+      <p
+        class="w-full text-lg p-4 bg-gray-100 text-gray-500"
+        v-else-if="pageTag === PAGE_TAG_CONFIRM_INITALIZE_DATA"
+      >
+        {{ userName }}
+      </p>
 
       <button
-        class="w-full text-lg md:text-2xl text-white h-12 md:h-16 rounded-md font-bold p-2 bg-blue-500 mt-12"
+        class="w-full text-lg md:text-2xl text-white h-12 md:h-16 rounded-md font-bold p-2 mt-12"
+        :class="{
+          'bg-blue-300 pointer-events-none': isDisabledFormButton(),
+          'bg-blue-500': !isDisabledFormButton(),
+        }"
         @click.prevent="btnNextAction()"
+        :disabled="isDisabledFormButton()"
       >
         次へ
       </button>
 
       <button
         class="w-full text-lg md:text-2xl h-12 md:h-16 rounded-md font-bold p-2 text-blue-500 border border-blue-500"
+        v-if="pageTag !== PAGE_TAG_INPUT_INITALIZE_DATA"
       >
         戻る
       </button>
