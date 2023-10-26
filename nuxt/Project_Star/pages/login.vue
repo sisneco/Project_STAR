@@ -98,15 +98,15 @@ function canClickLoginButton() {
 
 <template>
   <div
-    class="flex p-8 md:p-12 lg:p-20 lg:justify-between flex-col gap-y-8 lg:flex-row min-h-screen items-center lg:items-start"
+    class="flex p-8 md:p-12 lg:p-20 lg:justify-between flex-col gap-y-8 lg:flex-row min-h-screen items-center"
   >
     <section class="flex flex-col gap-y-4 font-notojp pb-4 md:pb-0">
       <h1
-        class="text-4xl md:text-6xl lg:text-8xl font-oswald text-white md:border-b md:pb-2"
+        class="text-4xl md:text-6xl lg:text-8xl font-oswald text-white md:border-b md:pb-2 md:border-b-blue-300"
       >
         What do you want ?
       </h1>
-      <p class="text-sm md:text-base lg:text-lg text-white hidden md:block">
+      <p class="text-sm md:text-base lg:text-lg hidden md:block text-blue-100">
         ほわすたを使って いつまでも どこまでも 仲良く
       </p>
     </section>
@@ -128,7 +128,6 @@ function canClickLoginButton() {
       <div class="w-full flex flex-col gap-y-2 md:gap-y-4">
         <label for="email" class="text-base md:text-xl">Email</label>
         <input
-          placeholder="メールアドレスを入力してください"
           type="email"
           v-model="email"
           class="w-full text-sm md:text-lg rounded-md border p-2 md:p-4 outline-gray-300"
@@ -137,7 +136,6 @@ function canClickLoginButton() {
         <div class="w-full h-full flex flex-col gap-y-4">
           <label for="password" class="text-base md:text-xl">Password</label>
           <input
-            placeholder="パスワードを入力してください"
             type="password"
             v-model="password"
             class="w-full text-sm md:text-lg rounded-md border p-2 md:p-4 outline-gray-300"
