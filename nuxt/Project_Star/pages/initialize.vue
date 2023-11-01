@@ -1,4 +1,8 @@
 <script setup lang="ts">
+onMounted(() => {
+  document.getElementById("userId")?.focus();
+});
+
 // CONST
 /** ページタグ：フォーム（テキストフィールド）表示 */
 const PAGE_TAG_INPUT_INITALIZE_DATA = 1;
@@ -76,6 +80,12 @@ const formColumnText = computed(() => {
     ? "INITIALIZE"
     : "CONFIRM";
 });
+
+const formHelpText = computed(() => {
+  return pageTag.value === PAGE_TAG_INPUT_INITALIZE_DATA
+    ? "初期設定に必要な項目を入力してください。"
+    : "項目内容が正しいか確認してください。";
+});
 </script>
 
 <template>
@@ -86,13 +96,14 @@ const formColumnText = computed(() => {
       class="w-full md:min-w-[400px] max-w-[550px] h-[600px] md:h-[750px] bg-white rounded-lg px-8 py-4 md:py-12 font-notojp flex flex-col gap-y-4"
     >
       <h2 class="text-4xl md:text-5xl font-oswald">{{ formColumnText }}</h2>
+      <p>{{ formHelpText }}</p>
       <div class="flex flex-col">
-        <label class="text-lg">ID </label>
+        <label class="text-lg">ユーザーID </label>
         <p class="text-sm text-red-500">※半角4文字～8文字の半角英数字</p>
       </div>
       <input
         type="text"
-        id="tex1"
+        id="userId"
         autocomplete="off"
         placeholder="whastar"
         v-model="userId"
@@ -106,12 +117,12 @@ const formColumnText = computed(() => {
         {{ userId }}
       </p>
       <div class="flex flex-col">
-        <label class="text-lg">名前 </label>
+        <label class="text-lg">ユーザー名</label>
         <p class="text-sm text-red-500">※名前は後からでも変更できます</p>
       </div>
       <input
         type="text"
-        id="text2"
+        id="userName"
         autocomplete="off"
         placeholder="ほわすた"
         v-model="userName"
@@ -126,7 +137,7 @@ const formColumnText = computed(() => {
       </p>
 
       <button
-        class="w-full text-lg md:text-2xl text-white h-12 md:h-16 rounded-md font-bold p-2 mt-12"
+        class="w-full text-lg md:text-2xl text-white h-12 md:h-16 rounded-md font-bold p-2 mt-12 outline-none"
         :class="{
           'bg-blue-300 pointer-events-none': isDisabledFormButton(),
           'bg-blue-500': !isDisabledFormButton(),
@@ -138,7 +149,7 @@ const formColumnText = computed(() => {
       </button>
 
       <button
-        class="w-full text-lg md:text-2xl h-12 md:h-16 rounded-md font-bold p-2 text-blue-500 border border-blue-500"
+        class="w-full text-lg md:text-2xl h-12 md:h-16 rounded-md font-bold p-2 text-blue-500 border border-blue-500 outline-none"
         v-if="pageTag !== PAGE_TAG_INPUT_INITALIZE_DATA"
       >
         戻る
