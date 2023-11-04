@@ -1,9 +1,15 @@
 <script setup lang="ts">
+onMounted(() => {
+  if (isMaxWidth768()) {
+    isModalVisible.value = false;
+  }
+});
+
 // VALUES
 const inputText: Ref = ref("");
 const btnText: Ref = ref("次へ");
 
-const isModalVisible: Ref = ref(false);
+const isModalVisible: Ref = ref(true);
 
 // CONST
 /** textAreaの自動サイズ調整用の高さ */
@@ -65,6 +71,14 @@ formArray.push(
 );
 formArray.push(
   new Form("priority", "優先度はどうでしょうか？", INPUT_TYPE_STAR, "優先度")
+);
+formArray.push(
+  new Form(
+    "itemUrl",
+    "商品URLがあれば書き込んで！",
+    INPUT_TYPE_TEXT,
+    "商品URL（任意）"
+  )
 );
 formArray.push(
   new Form(
@@ -229,26 +243,30 @@ const nowFormArrayIndex = computed(() => {
 
 <template>
   <div
-    class="fixed w-screen h-screen lg:w-full lg:h-[150px] top-0 lg:flex flex-col lg:sticky bg-white border-b border-gray-200 p-4 gap-y-4"
+    class="fixed w-screen h-screen flex flex-col-reverse top-0 bg-white border-b border-gray-200 p-4 gap-y-4 lg:w-full lg:h-[150px] lg:flex-col lg:sticky"
     id="wrapper-textarea"
     :class="{ hidden: !isModalVisible }"
   >
     <div
-      class="w-full h-1/2 py-2 lg:py-0 flex justify-end gap-x-2 pr-4 text-white font-bold font-sans items-center border-b pb-4"
+      class="w-full h-1/2 py-2 flex justify-end gap-x-2 pr-4 text-white font-bold font-sans border-b pb-4 items-end lg:items-center lg:py-0"
     >
       <div class="mr-auto flex text-gray-500 items-center">
-        <span>項目：</span>
-        <label class="text-lg">{{ currentForm.labelText }}</label>
-        <p>項目数： {{ nowFormArrayIndex + 1 }} /{{ formArray.length }}</p>
+        <span class="hidden md:block">項目：</span>
+        <label class="text-sm md:text-lg pb-2 md:pb-0">{{
+          currentForm.labelText
+        }}</label>
+        <p class="text-sm md:text-base pl-2 pb-2 md:pb-0">
+          {{ nowFormArrayIndex + 1 }} /{{ formArray.length }}
+        </p>
       </div>
       <button
-        class="w-32 p-2 rounded-full text-blue-500 font-bold font-sans border border-blue-500"
+        class="w-24 md:w-32 p-2 rounded-full text-blue-500 font-bold font-sans border border-blue-500"
         @click="btnBackAction()"
       >
         戻る
       </button>
       <button
-        class="w-32 rounded-full p-2 text-white font-bold font-sans"
+        class="w-24 md:w-32 rounded-full p-2 text-white font-bold font-sans"
         @click="btnNextAction()"
         :class="{
           'bg-blue-300 pointer-events-none': inputText == '',
@@ -259,7 +277,9 @@ const nowFormArrayIndex = computed(() => {
       </button>
     </div>
 
-    <div class="w-full h-1/2 flex flex-col gap-y-4 items-start justify-center">
+    <div
+      class="w-full h-1/2 flex flex-col gap-y-4 items-start lg:justify-center"
+    >
       <span
         class="lg:hidden hover:"
         :class="{ hidden: !isModalVisible }"

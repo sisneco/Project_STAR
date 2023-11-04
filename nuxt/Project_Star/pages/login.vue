@@ -3,15 +3,20 @@
 onMounted(() => {
   // RUN ====>
   createFirebaseUI();
+
+  document.getElementById("email").focus();
 });
 
 // VALUES
 const email = ref();
 const password = ref();
 
+// HTML ACTION VALUES
 const hasLoginError = ref(false);
 const goLoginErrorAnimation = ref(false);
+const isVisibleLoadingWindow = ref(false);
 
+// USE IMPORT VALUES
 const nuxtApp = useNuxtApp();
 const firebase = nuxtApp.$firebase;
 
@@ -41,17 +46,21 @@ async function createFirebaseUI() {
 function login() {
   // initialize value
   goLoginErrorAnimation.value = false;
+  isVisibleLoadingWindow.value = true;
 
   // challange login
   nuxtApp.$auth
     .signInWithEmailAndPassword(email.value, password.value)
     .then((result) => {
       // success
-      console.log("hoge");
+      return navigateTo({
+        path: "/initialize",
+      });
     })
     .catch((err) => {
       hasLoginError.value = true;
       goLoginErrorAnimation.value = true;
+      isVisibleLoadingWindow.value = false;
     });
 }
 
@@ -98,15 +107,25 @@ function canClickLoginButton() {
 
 <template>
   <div
-    class="flex p-8 md:p-12 lg:p-20 lg:justify-between flex-col gap-y-8 lg:flex-row min-h-screen items-center lg:items-start"
+    class="fixed top-0 left-0 bg-gray-100 z-50 w-full h-full opacity-50"
+    v-if="isVisibleLoadingWindow"
+  >
+    <div class="bouncing-loader flex items-center justify-center w-full h-full">
+      <div class="bg-red-300"></div>
+      <div class="bg-cyan-300"></div>
+      <div class="bg-yellow-300"></div>
+    </div>
+  </div>
+  <div
+    class="flex p-8 md:p-12 lg:p-20 lg:justify-between flex-col gap-y-8 lg:flex-row min-h-screen items-center"
   >
     <section class="flex flex-col gap-y-4 font-notojp pb-4 md:pb-0">
       <h1
-        class="text-4xl md:text-6xl lg:text-8xl font-oswald text-white md:border-b md:pb-2"
+        class="text-4xl md:text-6xl lg:text-8xl font-oswald text-white md:border-b md:pb-2 md:border-b-blue-300"
       >
         What do you want ?
       </h1>
-      <p class="text-sm md:text-base lg:text-lg text-white hidden md:block">
+      <p class="text-sm md:text-base lg:text-lg hidden md:block text-blue-100">
         ほわすたを使って いつまでも どこまでも 仲良く
       </p>
     </section>
@@ -128,19 +147,18 @@ function canClickLoginButton() {
       <div class="w-full flex flex-col gap-y-2 md:gap-y-4">
         <label for="email" class="text-base md:text-xl">Email</label>
         <input
-          placeholder="メールアドレスを入力してください"
+          id="email"
           type="email"
           v-model="email"
-          class="w-full text-sm md:text-lg rounded-md border p-2 md:p-4 outline-gray-300"
+          class="w-full text-sm md:text-lg rounded-md border p-2 md:p-4 outline-blue-100"
         />
 
         <div class="w-full h-full flex flex-col gap-y-4">
           <label for="password" class="text-base md:text-xl">Password</label>
           <input
-            placeholder="パスワードを入力してください"
             type="password"
             v-model="password"
-            class="w-full text-sm md:text-lg rounded-md border p-2 md:p-4 outline-gray-300"
+            class="w-full text-sm md:text-lg rounded-md border p-2 md:p-4 outline-blue-100"
           />
         </div>
       </div>
@@ -174,5 +192,29 @@ function canClickLoginButton() {
       rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y))
       scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
   }
+}
+
+@keyframes bouncing-loader {
+  to {
+    opacity: 0.1;
+    transform: translate3d(0, -1rem, 0);
+  }
+}
+.bouncing-loader {
+  display: flex;
+  justify-content: center;
+}
+.bouncing-loader > div {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 6rem 1rem;
+  border-radius: 50%;
+  animation: bouncing-loader 0.6s infinite alternate;
+}
+.bouncing-loader > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.bouncing-loader > div:nth-child(3) {
+  animation-delay: 0.4s;
 }
 </style>
