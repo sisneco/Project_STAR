@@ -18,9 +18,18 @@ const userName: Ref<string> = ref("");
 
 // METHODS
 function btnNextAction() {
-  //TODO 同一ユーザーID確認処理
+  if (pageTag.value === PAGE_TAG_INPUT_INITALIZE_DATA) {
+    //TODO 同一ユーザーID確認処理
+    ++pageTag.value;
+  } else {
+    return navigateTo({
+      path: "/home",
+    });
+  }
+}
 
-  ++pageTag.value;
+function btnBackAction() {
+  --pageTag.value;
 }
 
 /**
@@ -37,7 +46,6 @@ function isDisabledFormButton(): boolean {
  */
 function hasValidErrorUserId(): boolean {
   const target: string = userId.value;
-  console.log(target);
 
   // 1. 空白チェック
   if (target === "") {
@@ -61,8 +69,6 @@ function hasValidErrorUserId(): boolean {
 function hasValidErrorUserName() {
   const target: string = userName.value;
 
-  console.log(target);
-
   if (target === "") {
     return true;
   }
@@ -85,6 +91,10 @@ const formHelpText = computed(() => {
   return pageTag.value === PAGE_TAG_INPUT_INITALIZE_DATA
     ? "初期設定に必要な項目を入力してください。"
     : "項目内容が正しいか確認してください。";
+});
+
+const buttonNextText = computed(() => {
+  return pageTag.value === PAGE_TAG_INPUT_INITALIZE_DATA ? "次へ" : "登録";
 });
 </script>
 
@@ -145,12 +155,13 @@ const formHelpText = computed(() => {
         @click.prevent="btnNextAction()"
         :disabled="isDisabledFormButton()"
       >
-        次へ
+        {{ buttonNextText }}
       </button>
 
       <button
         class="w-full text-lg md:text-2xl h-12 md:h-16 rounded-md font-bold p-2 text-blue-500 border border-blue-500 outline-none"
         v-if="pageTag !== PAGE_TAG_INPUT_INITALIZE_DATA"
+        @click.prevent="btnBackAction()"
       >
         戻る
       </button>

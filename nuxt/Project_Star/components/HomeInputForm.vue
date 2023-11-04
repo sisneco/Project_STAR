@@ -1,9 +1,15 @@
 <script setup lang="ts">
+onMounted(() => {
+  if (isMaxWidth768()) {
+    isModalVisible.value = false;
+  }
+});
+
 // VALUES
 const inputText: Ref = ref("");
 const btnText: Ref = ref("次へ");
 
-const isModalVisible: Ref = ref(false);
+const isModalVisible: Ref = ref(true);
 
 // CONST
 /** textAreaの自動サイズ調整用の高さ */
@@ -65,6 +71,14 @@ formArray.push(
 );
 formArray.push(
   new Form("priority", "優先度はどうでしょうか？", INPUT_TYPE_STAR, "優先度")
+);
+formArray.push(
+  new Form(
+    "itemUrl",
+    "商品URLがあれば書き込んで！",
+    INPUT_TYPE_TEXT,
+    "商品URL（任意）"
+  )
 );
 formArray.push(
   new Form(
