@@ -11,6 +11,9 @@ const btnText: Ref = ref("次へ");
 
 const isModalVisible: Ref = ref(true);
 
+// USE IMPORT VALUES
+const nuxtApp = useNuxtApp();
+
 // CONST
 /** textAreaの自動サイズ調整用の高さ */
 let HEIGHT_WRAPPER_TEXTAREA: any = null;
@@ -48,6 +51,10 @@ class Form {
 
     // valueのみ空白で初期化
     this.value = "";
+  }
+
+  getAddJsonFormat(): object {
+    return { [this.key]: this.value };
   }
 }
 
@@ -152,6 +159,14 @@ function countParamNewLine(target: string): number {
  * 次へ or 登録押下時のボタン処理
  */
 function btnNextAction() {
+  const loadingModal = ref();
+  loadingModal.value;
+
+  if (formArray.length - 1 === nowFormArrayIndex.value) {
+    btnRegisterAction();
+    return;
+  }
+
   btnCommonFormAction(true);
 }
 
@@ -196,12 +211,28 @@ function btnCommonFormAction(isNext: boolean) {
   }
 }
 
+/**
+ * フォーム（モーダル）を開く時の処理
+ */
 function btnOpenModalAction() {
   // 共通処理(モーダル)
   btnCommonModalAction();
 
   // フォーカスを当てる
   autoInputFocus();
+}
+
+/**
+ * 登録ボタンクリック時の処理
+ */
+async function btnRegisterAction() {
+  const db: any = nuxtApp.$db;
+
+  const addJsonParameter: Array<object> = formArray.map((f) =>
+    f.getAddJsonFormat()
+  );
+
+  db.addJsonParameter = await db.collection("items").add(addJsonParameter);
 }
 
 /**
@@ -220,6 +251,10 @@ function autoInputFocus() {
   });
 }
 
+/**
+ * 優先度（星）の星アイコンクリック時にCSSクラスを追加する
+ * @param n 星の数
+ */
 function clickRatingStar(n: number) {
   for (let i = 0; i <= 5; i++) {
     const color: string = i <= n ? "yellow" : "gray";
@@ -242,6 +277,8 @@ const nowFormArrayIndex = computed(() => {
 </script>
 
 <template>
+  <LoadingModal ref="loadingModal" />
+
   <div
     class="fixed w-screen h-screen flex flex-col-reverse top-0 bg-white border-b border-gray-200 p-4 gap-y-4 lg:w-full lg:h-[150px] lg:flex-col lg:sticky"
     id="wrapper-textarea"
