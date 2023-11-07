@@ -228,9 +228,15 @@ function btnOpenModalAction() {
 async function btnRegisterAction() {
   const db: any = nuxtApp.$db;
 
-  const addJsonParameter: Array<object> = formArray.map((f) =>
-    f.getAddJsonFormat()
-  );
+  interface addJsonParameterFormat {
+    [key: string]: string;
+  }
+
+  const addJsonParameter: addJsonParameterFormat = {};
+
+  for (let i: number = 0; i < formArray.length; i++) {
+    addJsonParameter[formArray[i].key] = formArray[i].value;
+  }
 
   db.addJsonParameter = await db.collection("items").add(addJsonParameter);
 }
