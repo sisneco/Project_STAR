@@ -3,11 +3,12 @@
 const isVisibleLoadingWindow: Ref<boolean> = ref(false);
 
 // METHODS
-function switchIsVisibleLoadingWindow() {
+function switchIsVisibleLoadingWindow(): void {
   isVisibleLoadingWindow.value = !isVisibleLoadingWindow.value;
 }
 
 defineExpose({
+  isVisibleLoadingWindow,
   switchIsVisibleLoadingWindow,
 });
 </script>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import LoadingModal from "./LoadingModal.vue";
+
 onMounted(() => {
   if (isMaxWidth768()) {
     isModalVisible.value = false;
@@ -13,6 +15,7 @@ const isModalVisible: Ref = ref(true);
 
 // USE IMPORT VALUES
 const nuxtApp = useNuxtApp();
+const loadingModal = ref<InstanceType<typeof LoadingModal> | null>(null);
 
 // CONST
 /** textAreaの自動サイズ調整用の高さ */
@@ -159,9 +162,6 @@ function countParamNewLine(target: string): number {
  * 次へ or 登録押下時のボタン処理
  */
 function btnNextAction() {
-  const loadingModal = ref();
-  loadingModal.value;
-
   if (formArray.length - 1 === nowFormArrayIndex.value) {
     btnRegisterAction();
     return;
@@ -238,7 +238,10 @@ async function btnRegisterAction() {
     addJsonParameter[formArray[i].key] = formArray[i].value;
   }
 
+  // 登録処理（ローディングモーダルで制御）
+  loadingModal.value?.switchIsVisibleLoadingWindow();
   db.addJsonParameter = await db.collection("items").add(addJsonParameter);
+  loadingModal.value?.switchIsVisibleLoadingWindow();
 }
 
 /**
