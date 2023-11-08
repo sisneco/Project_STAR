@@ -1,5 +1,7 @@
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
 
 export default defineNuxtPlugin((nuxtApp) => {
   const firebaseConfig = {
@@ -17,6 +19,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   const auth = firebase.auth();
 
   nuxtApp.provide("auth", auth);
+
+  nuxtApp.provide("db", firebase.firestore());
+
+  nuxtApp.provide("storage", firebase.storage());
 
   nuxtApp.provide("firebase", firebase);
 });
