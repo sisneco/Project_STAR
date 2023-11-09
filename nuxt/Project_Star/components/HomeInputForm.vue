@@ -9,7 +9,6 @@ onMounted(() => {
 
 // VALUES
 const inputText: Ref = ref("");
-const btnText: Ref = ref("次へ");
 
 const isModalVisible: Ref = ref(true);
 
@@ -32,6 +31,13 @@ const INPUT_TYPE_TEXTAREA = "textarea";
 const INPUT_TYPE_STAR = "star";
 
 const formArray: Array<Form> = new Array();
+
+// ENUM
+enum BtnType {
+  next = 0,
+  back = 1,
+  register = 2,
+}
 
 class Form {
   // FIELD
@@ -194,9 +200,6 @@ function btnCommonFormAction(isNext: boolean) {
   currentForm.value = formArray[index];
   inputText.value = currentForm.value.value;
 
-  // ボタンテキストを更新
-  btnText.value = index === formArray.length - 1 ? "登録" : "次へ";
-
   // フォーカスを当てる
   autoInputFocus();
 
@@ -208,6 +211,20 @@ function btnCommonFormAction(isNext: boolean) {
     nextTick(() => {
       clickRatingStar(Number.parseInt(currentForm.value.value));
     });
+  }
+}
+
+function btnCommonAction(btnType: BtnType): void {
+  switch (btnType) {
+    case BtnType.next:
+      btnNextAction();
+      break;
+    case BtnType.back:
+      btnBackAction();
+      break;
+    case BtnType.register:
+      btnRegisterAction();
+      break;
   }
 }
 
@@ -242,6 +259,18 @@ async function btnRegisterAction() {
   loadingModal.value?.switchIsVisibleLoadingWindow();
   db.addJsonParameter = await db.collection("items").add(addJsonParameter);
   loadingModal.value?.switchIsVisibleLoadingWindow();
+
+  resetFormStatus();
+}
+
+/**
+ * フォームの状態を元に戻す
+ */
+function resetFormStatus(): void {
+  formArray.forEach((val) => (val.value = ""));
+  currentForm.value = formArray[0];
+
+  inputText.value = currentForm.value.value;
 }
 
 /**
@@ -283,6 +312,16 @@ function clickRatingStar(n: number) {
 const nowFormArrayIndex = computed(() => {
   return formArray.findIndex((v) => v.key === currentForm.value.key);
 });
+
+const shouldUseBtnNext = computed(() => {
+  return nowFormArrayIndex.value === formArray.length - 1
+    ? BtnType.register
+    : BtnType.next;
+});
+
+const btnNextName = computed(() => {
+  return shouldUseBtnNext.value === BtnType.register ? "登録" : "次へ";
+});
 </script>
 
 <template>
@@ -308,18 +347,19 @@ const nowFormArrayIndex = computed(() => {
       <button
         class="w-24 md:w-32 p-2 rounded-full text-blue-500 font-bold font-sans border border-blue-500"
         @click="btnBackAction()"
+        v-if="nowFormArrayIndex !== 0"
       >
         戻る
       </button>
       <button
         class="w-24 md:w-32 rounded-full p-2 text-white font-bold font-sans"
-        @click="btnNextAction()"
+        @click="btnCommonAction(shouldUseBtnNext)"
         :class="{
           'bg-blue-300 pointer-events-none': inputText == '',
           'bg-blue-500': inputText != '',
         }"
       >
-        {{ btnText }}
+        {{ btnNextName }}
       </button>
     </div>
 
