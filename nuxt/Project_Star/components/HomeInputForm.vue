@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import LoadingModal from "./LoadingModal.vue";
-
 onMounted(() => {
   if (isMaxWidth768()) {
     isModalVisible.value = false;
@@ -214,6 +213,10 @@ function btnCommonFormAction(isNext: boolean) {
   }
 }
 
+/**
+ * 前ボタン共通のラッパークラス
+ * @param btnType ボタン種別
+ */
 function btnCommonAction(btnType: BtnType): void {
   switch (btnType) {
     case BtnType.next:
@@ -313,14 +316,14 @@ const nowFormArrayIndex = computed(() => {
   return formArray.findIndex((v) => v.key === currentForm.value.key);
 });
 
-const shouldUseBtnNext = computed(() => {
+const getBtnNextType = computed(() => {
   return nowFormArrayIndex.value === formArray.length - 1
     ? BtnType.register
     : BtnType.next;
 });
 
 const btnNextName = computed(() => {
-  return shouldUseBtnNext.value === BtnType.register ? "登録" : "次へ";
+  return getBtnNextType.value === BtnType.register ? "登録" : "次へ";
 });
 </script>
 
@@ -353,7 +356,9 @@ const btnNextName = computed(() => {
       </button>
       <button
         class="w-24 md:w-32 rounded-full p-2 text-white font-bold font-sans"
-        @click="btnCommonAction(shouldUseBtnNext)"
+        @click="btnCommonAction(getBtnNextType)"
+        @shortkey="btnCommonAction(getBtnNextType)"
+        v-shortkey="['ctrl']"
         :class="{
           'bg-blue-300 pointer-events-none': inputText == '',
           'bg-blue-500': inputText != '',
@@ -390,6 +395,7 @@ const btnNextName = computed(() => {
       />
       <input
         v-model="inputText"
+        v-shortkey.focus="['a']"
         type="text"
         id="text"
         :placeholder="currentForm.placeholderText"

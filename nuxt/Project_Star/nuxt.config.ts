@@ -1,13 +1,10 @@
-import svgLoader from "vite-svg-loader";
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  vite: {
-    plugins: [svgLoader()],
-  },
   devtools: { enabled: true },
   routeRules: {
-    "/login": { ssr: true, prerender: false },
+    "/": { prerender: false },
+    "/login": { ssr: true },
+    "/home": { ssr: false },
   },
   modules: ["@nuxtjs/tailwindcss"],
   app: {
