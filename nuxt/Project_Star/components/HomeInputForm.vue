@@ -7,7 +7,7 @@ onMounted(() => {
 });
 
 // VALUES
-const inputText: Ref = ref("");
+const inputText: Ref<string> = ref("");
 
 const isModalVisible: Ref = ref(true);
 
@@ -167,33 +167,17 @@ function countParamNewLine(target: string): number {
  * 次へ or 登録押下時のボタン処理
  */
 function btnNextAction() {
-  if (formArray.length - 1 === nowFormArrayIndex.value) {
-    btnRegisterAction();
+  // ボタンが非活性の場合は処理を実行しない
+  if (isDisabledBtnNext.value) {
+    console.log(isDisabledBtnNext.value);
     return;
   }
 
-  btnCommonFormAction(true);
-}
-
-/**
- * 戻るボタン押下時のボタン処理
- */
-function btnBackAction() {
-  btnCommonFormAction(false);
-}
-
-/**
- * ボタン共通処理
- * @param isNext true 次へボタン false 戻るボタン
- */
-function btnCommonFormAction(isNext: boolean) {
   // 現在のkeyの添字を取得
   let index: number = nowFormArrayIndex.value;
   // 入力値を保存
   formArray[index].value = inputText.value;
-
-  // 次へボタンの場合 -> インクリメント , 戻るボタンの場合 -> デクリメント
-  index = isNext ? ++index : --index;
+  index += 1;
 
   // 項目を更新(上記処理により、該当するフォームの値に紐づいて更新)
   currentForm.value = formArray[index];
@@ -214,7 +198,41 @@ function btnCommonFormAction(isNext: boolean) {
 }
 
 /**
- * 前ボタン共通のラッパークラス
+ * 戻るボタン押下時のボタン処理
+ */
+function btnBackAction() {
+  // 現在のkeyの添字を取得
+  let index: number = nowFormArrayIndex.value;
+
+  // 添字が0ならば処理を終了
+  if (index === 0) {
+    return;
+  }
+
+  // 入力値を保存
+  formArray[index].value = inputText.value;
+  index -= 1;
+
+  // 項目を更新(上記処理により、該当するフォームの値に紐づいて更新)
+  currentForm.value = formArray[index];
+  inputText.value = currentForm.value.value;
+
+  // フォーカスを当てる
+  autoInputFocus();
+
+  // 個別処理[星]のパラメータが設定されている場合 -> 初期設定をする
+  if (
+    currentForm.value.inputType === INPUT_TYPE_STAR &&
+    currentForm.value.value !== ""
+  ) {
+    nextTick(() => {
+      clickRatingStar(Number.parseInt(currentForm.value.value));
+    });
+  }
+}
+
+/**
+ * ボタン共通のラッパークラス
  * @param btnType ボタン種別
  */
 function btnCommonAction(btnType: BtnType): void {
@@ -306,7 +324,16 @@ function clickRatingStar(n: number) {
       el.style.color = color;
     }
 
-    inputText.value = n;
+    inputText.value = Number.toString(n);
+  }
+}
+
+/**
+ * 数値入力時、「e」を弾く
+ */
+function validatedNumber(e: any) {
+  if (!Number.isNaN(e.target.value)) {
+    e.target.value = e.target.value.substring(0, e.target.length - 1);
   }
 }
 
@@ -324,6 +351,10 @@ const getBtnNextType = computed(() => {
 
 const btnNextName = computed(() => {
   return getBtnNextType.value === BtnType.register ? "登録" : "次へ";
+});
+
+const isDisabledBtnNext = computed(() => {
+  return inputText.value === "";
 });
 </script>
 
@@ -357,8 +388,6 @@ const btnNextName = computed(() => {
       <button
         class="w-24 md:w-32 rounded-full p-2 text-white font-bold font-sans"
         @click="btnCommonAction(getBtnNextType)"
-        @shortkey="btnCommonAction(getBtnNextType)"
-        v-shortkey="['ctrl']"
         :class="{
           'bg-blue-300 pointer-events-none': inputText == '',
           'bg-blue-500': inputText != '',
@@ -370,6 +399,8 @@ const btnNextName = computed(() => {
 
     <div
       class="w-full h-1/2 flex flex-col gap-y-4 items-start lg:justify-center"
+      @keydown.ctrl.enter="btnCommonAction(getBtnNextType)"
+      @keydown.shift.enter="btnCommonAction(BtnType.back)"
     >
       <span
         class="lg:hidden hover:"
@@ -390,12 +421,12 @@ const btnNextName = computed(() => {
         type="number"
         id="number"
         :placeholder="currentForm.placeholderText"
+        @input="validatedNumber"
         class="w-full resize-none outline-none text-xl overflow-hidden"
         v-else-if="currentForm.inputType === INPUT_TYPE_NUMBER"
       />
       <input
         v-model="inputText"
-        v-shortkey.focus="['a']"
         type="text"
         id="text"
         :placeholder="currentForm.placeholderText"
