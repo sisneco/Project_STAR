@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "/home": { ssr: false },
   },
   modules: ["@nuxtjs/tailwindcss"],
+
   app: {
     head: {
       link: [
