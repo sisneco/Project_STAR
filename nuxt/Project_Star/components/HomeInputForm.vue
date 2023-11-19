@@ -45,17 +45,20 @@ class Form {
   value: string;
   inputType: string;
   labelText: string;
+  isNecessary: boolean;
 
   constructor(
     key: string,
     placeholder: string,
     inputType: string,
-    labelText: string
+    labelText: string,
+    isNecessary: boolean
   ) {
     this.key = key;
     this.placeholderText = placeholder;
     this.inputType = inputType;
     this.labelText = labelText;
+    this.isNecessary = isNecessary;
 
     // valueのみ空白で初期化
     this.value = "";
@@ -71,7 +74,8 @@ const currentForm: Ref<Form> = ref(
     "wantItem",
     "今欲しいものを書き込んでみましょう！",
     INPUT_TYPE_TEXT,
-    "欲しいもの"
+    "欲しいもの",
+    true
   )
 );
 
@@ -81,18 +85,26 @@ formArray.push(
     "price",
     "値段はどれぐらいになりそうですか？",
     INPUT_TYPE_NUMBER,
-    "金額"
+    "金額",
+    true
   )
 );
 formArray.push(
-  new Form("priority", "優先度はどうでしょうか？", INPUT_TYPE_STAR, "優先度")
+  new Form(
+    "priority",
+    "優先度はどうでしょうか？",
+    INPUT_TYPE_STAR,
+    "優先度",
+    true
+  )
 );
 formArray.push(
   new Form(
     "itemUrl",
     "商品URLがあれば書き込んで！",
     INPUT_TYPE_TEXT,
-    "商品URL（任意）"
+    "商品URL（任意）",
+    false
   )
 );
 formArray.push(
@@ -100,7 +112,8 @@ formArray.push(
     "memo",
     "なにか要望などがあれば書いてみましょう！",
     INPUT_TYPE_TEXTAREA,
-    "要望など"
+    "要望など",
+    false
   )
 );
 
@@ -324,16 +337,7 @@ function clickRatingStar(n: number) {
       el.style.color = color;
     }
 
-    inputText.value = Number.toString(n);
-  }
-}
-
-/**
- * 数値入力時、「e」を弾く
- */
-function validatedNumber(e: any) {
-  if (!Number.isNaN(e.target.value)) {
-    e.target.value = e.target.value.substring(0, e.target.length - 1);
+    inputText.value = String.toString(n);
   }
 }
 
@@ -354,7 +358,8 @@ const btnNextName = computed(() => {
 });
 
 const isDisabledBtnNext = computed(() => {
-  return inputText.value === "";
+  console.log(currentForm.value.isNecessary);
+  return inputText.value === "" && currentForm.value.isNecessary;
 });
 </script>
 
@@ -389,8 +394,8 @@ const isDisabledBtnNext = computed(() => {
         class="w-24 md:w-32 rounded-full p-2 text-white font-bold font-sans"
         @click="btnCommonAction(getBtnNextType)"
         :class="{
-          'bg-blue-300 pointer-events-none': inputText == '',
-          'bg-blue-500': inputText != '',
+          'bg-blue-300 pointer-events-none': isDisabledBtnNext,
+          'bg-blue-500': !isDisabledBtnNext,
         }"
       >
         {{ btnNextName }}
@@ -421,7 +426,7 @@ const isDisabledBtnNext = computed(() => {
         type="number"
         id="number"
         :placeholder="currentForm.placeholderText"
-        @input="validatedNumber"
+        onkeydown="return event.keyCode !== 69"
         class="w-full resize-none outline-none text-xl overflow-hidden"
         v-else-if="currentForm.inputType === INPUT_TYPE_NUMBER"
       />
