@@ -1,6 +1,6 @@
 <template>
   <section
-    class="hidden md:flex bg-pink-200 w-full h-[600px] p-4 sticky top-0 flex-col gap-y-6 rounded-xl"
+    class="hidden md:flex bg-pink-200 w-full h-[600px] p-4 top-0 flex-col gap-y-6 rounded-xl"
   >
     <img
       src="https://placehold.jp/150x150.png"

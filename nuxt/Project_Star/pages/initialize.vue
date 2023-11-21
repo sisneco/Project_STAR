@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import LoadingModal from "../components/LoadingModal.vue";
+
 onMounted(() => {
   document.getElementById("userId")?.focus();
 });
@@ -15,6 +17,10 @@ const pageTag: Ref<number> = ref(PAGE_TAG_INPUT_INITALIZE_DATA);
 // form parameter
 const userId: Ref<string> = ref("");
 const userName: Ref<string> = ref("");
+
+// USE IMPORT VALUES
+const nuxtApp = useNuxtApp();
+const loadingModal = ref<InstanceType<typeof LoadingModal> | null>(null);
 
 // METHODS
 function btnNextAction() {
@@ -78,6 +84,28 @@ function hasValidErrorUserName() {
   }
 
   return false;
+}
+
+/**
+ * 登録ボタンクリック時の処理
+ */
+async function btnRegisterAction() {
+  const db: any = nuxtApp.$db;
+
+  interface addJsonParameterFormat {
+    userId: string;
+    userName: string;
+  }
+
+  const addJsonParameter: addJsonParameterFormat = {
+    userId: userId.value,
+    userName: userName.value,
+  };
+
+  // 登録処理（ローディングモーダルで制御）
+  loadingModal.value?.switchIsVisibleLoadingWindow();
+  db.addJsonParameter = await db.collection("items").add(addJsonParameter);
+  loadingModal.value?.switchIsVisibleLoadingWindow();
 }
 
 // COMPUTED

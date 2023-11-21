@@ -18,9 +18,13 @@
     "tailwindcss": "^3.3.3"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.1",
     "firebase": "^10.3.0",
     "firebaseui": "^6.1.0",
     "firebaseui-ja": "^1.0.0",
-    "vite-svg-loader": "^4.0.0"
+    "pinia": "^2.1.7"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

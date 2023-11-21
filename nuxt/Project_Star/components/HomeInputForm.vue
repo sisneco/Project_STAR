@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import LoadingModal from "./LoadingModal.vue";
-
 onMounted(() => {
   if (isMaxWidth768()) {
     isModalVisible.value = false;
@@ -8,7 +7,7 @@ onMounted(() => {
 });
 
 // VALUES
-const inputText: Ref = ref("");
+const inputText: Ref<string> = ref("");
 
 const isModalVisible: Ref = ref(true);
 
@@ -46,17 +45,20 @@ class Form {
   value: string;
   inputType: string;
   labelText: string;
+  isNecessary: boolean;
 
   constructor(
     key: string,
     placeholder: string,
     inputType: string,
-    labelText: string
+    labelText: string,
+    isNecessary: boolean
   ) {
     this.key = key;
     this.placeholderText = placeholder;
     this.inputType = inputType;
     this.labelText = labelText;
+    this.isNecessary = isNecessary;
 
     // valueのみ空白で初期化
     this.value = "";
@@ -72,7 +74,8 @@ const currentForm: Ref<Form> = ref(
     "wantItem",
     "今欲しいものを書き込んでみましょう！",
     INPUT_TYPE_TEXT,
-    "欲しいもの"
+    "欲しいもの",
+    true
   )
 );
 
@@ -82,18 +85,26 @@ formArray.push(
     "price",
     "値段はどれぐらいになりそうですか？",
     INPUT_TYPE_NUMBER,
-    "金額"
+    "金額",
+    true
   )
 );
 formArray.push(
-  new Form("priority", "優先度はどうでしょうか？", INPUT_TYPE_STAR, "優先度")
+  new Form(
+    "priority",
+    "優先度はどうでしょうか？",
+    INPUT_TYPE_STAR,
+    "優先度",
+    true
+  )
 );
 formArray.push(
   new Form(
     "itemUrl",
     "商品URLがあれば書き込んで！",
     INPUT_TYPE_TEXT,
-    "商品URL（任意）"
+    "商品URL（任意）",
+    false
   )
 );
 formArray.push(
@@ -101,7 +112,8 @@ formArray.push(
     "memo",
     "なにか要望などがあれば書いてみましょう！",
     INPUT_TYPE_TEXTAREA,
-    "要望など"
+    "要望など",
+    false
   )
 );
 
@@ -168,33 +180,17 @@ function countParamNewLine(target: string): number {
  * 次へ or 登録押下時のボタン処理
  */
 function btnNextAction() {
-  if (formArray.length - 1 === nowFormArrayIndex.value) {
-    btnRegisterAction();
+  // ボタンが非活性の場合は処理を実行しない
+  if (isDisabledBtnNext.value) {
+    console.log(isDisabledBtnNext.value);
     return;
   }
 
-  btnCommonFormAction(true);
-}
-
-/**
- * 戻るボタン押下時のボタン処理
- */
-function btnBackAction() {
-  btnCommonFormAction(false);
-}
-
-/**
- * ボタン共通処理
- * @param isNext true 次へボタン false 戻るボタン
- */
-function btnCommonFormAction(isNext: boolean) {
   // 現在のkeyの添字を取得
   let index: number = nowFormArrayIndex.value;
   // 入力値を保存
   formArray[index].value = inputText.value;
-
-  // 次へボタンの場合 -> インクリメント , 戻るボタンの場合 -> デクリメント
-  index = isNext ? ++index : --index;
+  index += 1;
 
   // 項目を更新(上記処理により、該当するフォームの値に紐づいて更新)
   currentForm.value = formArray[index];
@@ -214,6 +210,44 @@ function btnCommonFormAction(isNext: boolean) {
   }
 }
 
+/**
+ * 戻るボタン押下時のボタン処理
+ */
+function btnBackAction() {
+  // 現在のkeyの添字を取得
+  let index: number = nowFormArrayIndex.value;
+
+  // 添字が0ならば処理を終了
+  if (index === 0) {
+    return;
+  }
+
+  // 入力値を保存
+  formArray[index].value = inputText.value;
+  index -= 1;
+
+  // 項目を更新(上記処理により、該当するフォームの値に紐づいて更新)
+  currentForm.value = formArray[index];
+  inputText.value = currentForm.value.value;
+
+  // フォーカスを当てる
+  autoInputFocus();
+
+  // 個別処理[星]のパラメータが設定されている場合 -> 初期設定をする
+  if (
+    currentForm.value.inputType === INPUT_TYPE_STAR &&
+    currentForm.value.value !== ""
+  ) {
+    nextTick(() => {
+      clickRatingStar(Number.parseInt(currentForm.value.value));
+    });
+  }
+}
+
+/**
+ * ボタン共通のラッパークラス
+ * @param btnType ボタン種別
+ */
 function btnCommonAction(btnType: BtnType): void {
   switch (btnType) {
     case BtnType.next:
@@ -303,7 +337,7 @@ function clickRatingStar(n: number) {
       el.style.color = color;
     }
 
-    inputText.value = n;
+    inputText.value = String.toString(n);
   }
 }
 
@@ -313,14 +347,19 @@ const nowFormArrayIndex = computed(() => {
   return formArray.findIndex((v) => v.key === currentForm.value.key);
 });
 
-const shouldUseBtnNext = computed(() => {
+const getBtnNextType = computed(() => {
   return nowFormArrayIndex.value === formArray.length - 1
     ? BtnType.register
     : BtnType.next;
 });
 
 const btnNextName = computed(() => {
-  return shouldUseBtnNext.value === BtnType.register ? "登録" : "次へ";
+  return getBtnNextType.value === BtnType.register ? "登録" : "次へ";
+});
+
+const isDisabledBtnNext = computed(() => {
+  console.log(currentForm.value.isNecessary);
+  return inputText.value === "" && currentForm.value.isNecessary;
 });
 </script>
 
@@ -353,10 +392,10 @@ const btnNextName = computed(() => {
       </button>
       <button
         class="w-24 md:w-32 rounded-full p-2 text-white font-bold font-sans"
-        @click="btnCommonAction(shouldUseBtnNext)"
+        @click="btnCommonAction(getBtnNextType)"
         :class="{
-          'bg-blue-300 pointer-events-none': inputText == '',
-          'bg-blue-500': inputText != '',
+          'bg-blue-300 pointer-events-none': isDisabledBtnNext,
+          'bg-blue-500': !isDisabledBtnNext,
         }"
       >
         {{ btnNextName }}
@@ -365,6 +404,8 @@ const btnNextName = computed(() => {
 
     <div
       class="w-full h-1/2 flex flex-col gap-y-4 items-start lg:justify-center"
+      @keydown.ctrl.enter="btnCommonAction(getBtnNextType)"
+      @keydown.shift.enter="btnCommonAction(BtnType.back)"
     >
       <span
         class="lg:hidden hover:"
@@ -385,6 +426,7 @@ const btnNextName = computed(() => {
         type="number"
         id="number"
         :placeholder="currentForm.placeholderText"
+        onkeydown="return event.keyCode !== 69"
         class="w-full resize-none outline-none text-xl overflow-hidden"
         v-else-if="currentForm.inputType === INPUT_TYPE_NUMBER"
       />
