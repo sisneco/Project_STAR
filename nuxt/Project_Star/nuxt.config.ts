@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     "/login": { ssr: true },
     "/home": { ssr: false },
   },
-  modules: ["@nuxtjs/tailwindcss"],
+  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt"],
 
   app: {
     head: {
