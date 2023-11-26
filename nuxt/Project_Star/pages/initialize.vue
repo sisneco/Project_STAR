@@ -25,13 +25,11 @@ enum BtnType {
   back = 1,
   register = 2,
   notRegister = 3,
+  finish = 4,
 }
 
 // VALUES
 const pageTag: Ref<number> = ref(PAGE_TAG_INPUT_INITIALIZE_DATA);
-
-//TODO
-pageTag.value = PAGE_TAG_COMPLATE_INITIALIZE_DATA;
 
 // form parameter
 const userId: Ref<string> = ref("");
@@ -119,6 +117,19 @@ async function btnRegisterAction() {
   }
 }
 
+/**
+ * 最終ページのボタンクリック時の処理
+ */
+function btnFinishAction() {
+  return navigateTo({
+    path: "/home",
+  });
+}
+
+/**
+ * ボタン処理のラップメソッド
+ * @param btnType ボタン種別
+ */
 function btnCommonAction(btnType: BtnType): void {
   switch (btnType) {
     case BtnType.next:
@@ -130,6 +141,8 @@ function btnCommonAction(btnType: BtnType): void {
     case BtnType.register:
       btnRegisterAction();
       break;
+    case BtnType.finish:
+      btnFinishAction();
   }
 }
 
@@ -144,6 +157,10 @@ const formColumnText = computed(() => {
     pageTag.value === PAGE_TAG_INPUT_PARTNER_DATA
   ) {
     return "INITIALIZE";
+  }
+
+  if (pageTag.value === PAGE_TAG_COMPLATE_PARTNER_DATA) {
+    return "LET'S GO !";
   }
 
   return "CONFIRM";
@@ -170,18 +187,40 @@ const formHelpText = computed(() => {
     return "項目内容が正しいか確認してください。";
   }
 
+  if (pageTag.value === PAGE_TAG_COMPLATE_PARTNER_DATA) {
+    return "それでは、ほわすたをはじめましょう！  ";
+  }
+
   return "error";
 });
 
 const buttonNextText = computed(() => {
-  return getBtnNextType.value === BtnType.next ? "次へ" : "登録";
+  if (getBtnNextType.value === BtnType.next) {
+    return "次へ";
+  }
+
+  if (getBtnNextType.value === BtnType.register) {
+    return "登録";
+  }
+
+  if (getBtnNextType.value === BtnType.finish) {
+    return "ほわすたへようこそ！";
+  }
 });
 
 const getBtnNextType = computed(() => {
-  return pageTag.value === PAGE_TAG_CONFIRM_INITIALIZE_DATA ||
+  if (
+    pageTag.value === PAGE_TAG_CONFIRM_INITIALIZE_DATA ||
     pageTag.value === PAGE_TAG_CONFIRM_PARTNER_DATA
-    ? BtnType.register
-    : BtnType.next;
+  ) {
+    return BtnType.register;
+  }
+
+  if (pageTag.value === PAGE_TAG_COMPLATE_PARTNER_DATA) {
+    return BtnType.finish;
+  }
+
+  return BtnType.next;
 });
 
 const isVisibleBtnBack = computed(() => {
@@ -302,6 +341,8 @@ const isDisabledFormButton = computed(() => {
           {{ displayPartnerId }}
         </p>
       </div>
+
+      <div v-else-if="pageTag === PAGE_TAG_COMPLATE_PARTNER_DATA"></div>
 
       <button
         class="w-full text-lg md:text-2xl text-white h-12 md:h-16 rounded-md font-bold p-2 mt-12 outline-none"
