@@ -358,7 +358,6 @@ const btnNextName = computed(() => {
 });
 
 const isDisabledBtnNext = computed(() => {
-  console.log(currentForm.value.isNecessary);
   return inputText.value === "" && currentForm.value.isNecessary;
 });
 </script>

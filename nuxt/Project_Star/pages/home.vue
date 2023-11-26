@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import HomeWishContainer from "../components/HomeWishContainer.vue";
 
+definePageMeta({
+  middleware: ["redirect"],
+});
+
 // LifeCicle
 </script>
 
