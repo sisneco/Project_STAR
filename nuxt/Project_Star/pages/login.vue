@@ -19,8 +19,6 @@ const isVisibleLoadingWindow = ref(false);
 // USE IMPORT VALUES
 const nuxtApp = useNuxtApp();
 const firebase = nuxtApp.$firebase;
-const userStore = adminStore();
-
 // METHODS
 
 /**
@@ -53,10 +51,10 @@ function login() {
   nuxtApp.$auth
     .signInWithEmailAndPassword(email.value, password.value)
     .then((result) => {
-      userStore.setUid(result.user.uid);
+      userStore().setUid(result.user.uid);
       // success
       return navigateTo({
-        path: "/initialize",
+        path: "/home",
       });
     })
     .catch((err) => {

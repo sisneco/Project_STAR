@@ -39,7 +39,6 @@ const partnerId: Ref<string> = ref("");
 // USE IMPORT VALUES
 const nuxtApp = useNuxtApp();
 const loadingModal = ref<InstanceType<typeof LoadingModal> | null>(null);
-const userStore = adminStore();
 
 // METHODS
 function btnNextAction() {
@@ -108,7 +107,7 @@ async function btnRegisterAction() {
 
   // 登録処理（ローディングモーダルで制御）
   loadingModal.value?.switchIsVisibleLoadingWindow();
-  await db.collection("users").doc(userStore.uid).set(addJsonParameter);
+  await db.collection("users").doc(userStore().uid).set(addJsonParameter);
   loadingModal.value?.switchIsVisibleLoadingWindow();
 
   // 最終ページではない場合、インクリメント

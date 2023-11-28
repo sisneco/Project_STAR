@@ -1,6 +1,8 @@
-export default defineNuxtRouteMiddleware(async (to, from) => {
-  const nuxtApp = useNuxtApp();
+import { userStore } from "../stores/userStore";
 
+export default defineNuxtRouteMiddleware(async (to, from) => {
+  // USE IMPORT VALUES
+  const nuxtApp = useNuxtApp();
   const auth: any = nuxtApp.$auth;
 
   // Observerのため、仕方なくPromiseでゴリ押す
@@ -10,13 +12,16 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     });
   });
 
-  let isLogin = false;
+  if (userStore().isSettingStoreValue()) {
+  }
 
-  const result = await initializeAuth;
+  const result: any = await initializeAuth;
 
   console.log(result.uid);
 
   if (result === null) {
     return navigateTo("/login");
   }
+
+  userStore().setUid(result.uid);
 });
