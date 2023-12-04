@@ -1,6 +1,7 @@
 <script setup lang="ts">
 // USE IMPORT VALUES
 const nuxtApp = useNuxtApp();
+const auth = nuxtApp.$auth;
 
 // METHODS
 function logOut(): void {
@@ -27,7 +28,7 @@ function logOut(): void {
     <button
       class="w-32 p-2 rounded-full text-blue-500 font-bold font-sans border border-blue-500"
       @click="logOut()"
-      v-if="userStore().isSettingStore()"
+      v-if="userStore().isSettingStoreValue"
     >
       ログアウト
     </button>

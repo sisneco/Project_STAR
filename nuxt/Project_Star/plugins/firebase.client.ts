@@ -18,7 +18,16 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const auth = firebase.auth();
 
+  // Observerのため、仕方なくPromiseでゴリ押す
+  const initializeAuth = new Promise((resolve) => {
+    auth.onAuthStateChanged((user: any) => {
+      resolve(user);
+    });
+  });
+
   nuxtApp.provide("auth", auth);
+
+  nuxtApp.provide("fetchAuthInfo", initializeAuth);
 
   nuxtApp.provide("db", firebase.firestore());
 

@@ -7,6 +7,10 @@ onMounted(() => {
   document.getElementById("email").focus();
 });
 
+definePageMeta({
+  middleware: ["redirect"],
+});
+
 // VALUES
 const email = ref();
 const password = ref();
@@ -18,7 +22,9 @@ const isVisibleLoadingWindow = ref(false);
 
 // USE IMPORT VALUES
 const nuxtApp = useNuxtApp();
+
 const firebase = nuxtApp.$firebase;
+const auth = nuxtApp.$auth;
 // METHODS
 
 /**

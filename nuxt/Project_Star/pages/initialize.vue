@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import LoadingModal from "../components/LoadingModal.vue";
 
+definePageMeta({
+  middleware: ["redirect"],
+});
+
 onMounted(() => {
   document.getElementById("userId")?.focus();
 });

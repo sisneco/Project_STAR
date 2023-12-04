@@ -1,27 +1,52 @@
 import { userStore } from "../stores/userStore";
 
+// ENUM
+enum pagePath {
+  login = "/login",
+  initialize = "/initialize",
+  home = "/home",
+}
+
 export default defineNuxtRouteMiddleware(async (to, from) => {
   // USE IMPORT VALUES
   const nuxtApp = useNuxtApp();
-  const auth: any = nuxtApp.$auth;
 
-  // Observerのため、仕方なくPromiseでゴリ押す
-  const initializeAuth = new Promise((resolve) => {
-    auth.onAuthStateChanged((user: any) => {
-      resolve(user);
-    });
-  });
+  const result: any = await nuxtApp.$fetchAuthInfo;
 
-  if (userStore().isSettingStoreValue()) {
-  }
-
-  const result: any = await initializeAuth;
-
-  console.log(result.uid);
-
+  console.log(result);
+  // No Login
   if (result === null) {
-    return navigateTo("/login");
+    if (redirectPageRejects(to, from, pagePath.login)) {
+      return;
+    }
+
+    return navigateTo(pagePath.login);
   }
 
-  userStore().setUid(result.uid);
+  if (!userStore().isSettingStoreValue) {
+    await userStore().fetchUserInfo();
+  }
+
+  if (!userStore().isSettingStoreValue) {
+    if (redirectPageRejects(to, from, pagePath.initialize)) {
+      return;
+    }
+    return navigateTo(pagePath.initialize);
+  }
 });
+
+const redirectPageRejects = (to: any, from: any, path: pagePath) => {
+  if (to.path === path && from.path !== path) {
+    return true;
+  }
+
+  if (to.path !== path && from.path === path) {
+    return true;
+  }
+
+  if (to.path === path && from.path === path) {
+    return true;
+  }
+
+  return false;
+};
