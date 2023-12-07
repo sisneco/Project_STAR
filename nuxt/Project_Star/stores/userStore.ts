@@ -6,10 +6,6 @@ const INITIAL_VALUE_USER_ID = "";
 const INITIAL_VALUE_USER_NAME = "";
 const INITIAL_VALUE_PARTNER_UID = "";
 
-// USE IMPORT VALUES
-const nuxtApp = useNuxtApp();
-const db: any = nuxtApp.$db;
-
 export const userStore = defineStore("userStore", {
   state: () => ({
     uid: INITIAL_VALUE_UID, // firebase auth Id
@@ -36,7 +32,13 @@ export const userStore = defineStore("userStore", {
       this.userId = INITIAL_VALUE_USER_ID;
       this.partnerUid = INITIAL_VALUE_PARTNER_UID;
     },
-    async fetchUserInfo(): void {
+    fetchUserInfo(uid: string): void {
+      // USE IMPORT VALUES
+      const nuxtApp = useNuxtApp();
+      const db: any = nuxtApp.$db;
+
+      this.uid = uid;
+
       const query = db.collection("users").doc(this.uid);
 
       const fetchResult = query.get(); // firebase.firestore.DocumentSnapshotのインスタンスを取得
