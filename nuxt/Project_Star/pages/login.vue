@@ -7,6 +7,10 @@ onMounted(() => {
   document.getElementById("email").focus();
 });
 
+definePageMeta({
+  middleware: ["redirect"],
+});
+
 // VALUES
 const email = ref();
 const password = ref();
@@ -18,9 +22,9 @@ const isVisibleLoadingWindow = ref(false);
 
 // USE IMPORT VALUES
 const nuxtApp = useNuxtApp();
-const firebase = nuxtApp.$firebase;
-const userStore = adminStore();
 
+const firebase = nuxtApp.$firebase;
+const auth = nuxtApp.$auth;
 // METHODS
 
 /**
@@ -53,10 +57,10 @@ function login() {
   nuxtApp.$auth
     .signInWithEmailAndPassword(email.value, password.value)
     .then((result) => {
-      userStore.setUid(result.user.uid);
+      userStore().setUid(result.user.uid);
       // success
       return navigateTo({
-        path: "/initialize",
+        path: "/home",
       });
     })
     .catch((err) => {
