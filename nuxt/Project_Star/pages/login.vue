@@ -24,7 +24,6 @@ const isVisibleLoadingWindow = ref(false);
 const nuxtApp = useNuxtApp();
 
 const firebase = nuxtApp.$firebase;
-const auth = nuxtApp.$auth;
 // METHODS
 
 /**
@@ -37,7 +36,7 @@ async function createFirebaseUI() {
   const ui = new firebaseui.auth.AuthUI(nuxtApp.$auth);
 
   const uiConfig = {
-    signInSuccessUrl: "/",
+    signInSuccessUrl: "/home",
     signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
   };
 

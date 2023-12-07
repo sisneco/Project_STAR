@@ -8,12 +8,23 @@ enum pagePath {
 }
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  if (process.server) return;
+
   // USE IMPORT VALUES
   const nuxtApp = useNuxtApp();
+  const auth: any = nuxtApp.$auth;
 
-  const result: any = await nuxtApp.$fetchAuthInfo;
+  // Observerのため、仕方なくPromiseでゴリ押す
+  const initializeAuth = new Promise((resolve) => {
+    auth.onAuthStateChanged((user: any) => {
+      resolve(user);
+    });
+  });
+
+  const result: any = await initializeAuth;
 
   console.log(result);
+
   // No Login
   if (result === null) {
     if (redirectPageRejects(to, from, pagePath.login)) {
@@ -24,7 +35,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   if (!userStore().isSettingStoreValue) {
-    await userStore().fetchUserInfo();
+    userStore().fetchUserInfo(result.uid);
   }
 
   if (!userStore().isSettingStoreValue) {
