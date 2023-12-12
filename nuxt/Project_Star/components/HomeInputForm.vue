@@ -289,6 +289,8 @@ async function btnRegisterAction() {
     addJsonParameter[formArray[i].key] = formArray[i].value;
   }
 
+  addJsonParameter.uid = userStore().uid;
+
   // 登録処理（ローディングモーダルで制御）
   loadingModal.value?.switchIsVisibleLoadingWindow();
   db.addJsonParameter = await db.collection("items").add(addJsonParameter);
