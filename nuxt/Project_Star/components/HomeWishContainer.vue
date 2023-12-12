@@ -6,6 +6,9 @@ const nuxtApp = useNuxtApp();
 
 const db: any = nuxtApp.$db;
 
+const wishList: Ref<any[]> = ref([]);
+featchWishList();
+
 // METHODS
 /**
  * 欲しいものリストを取得
@@ -13,19 +16,19 @@ const db: any = nuxtApp.$db;
 async function featchWishList() {
   const querySnapshot = await db.collection("items").get();
 
-  let arr = new Array();
+  console.log("hoge");
 
-  querySnapshot.forEach((doc: any) => {
+  await querySnapshot.forEach((doc: any) => {
     let tmp = null;
     tmp = doc.data();
     tmp.id = doc.id;
-    arr.push(tmp);
+    wishList.value.push(tmp);
   });
 }
 </script>
 
 <template>
   <div class="bg-white w-full p-8 flex flex-col gap-y-8">
-    <HomeWishSection />
+    <HomeWishSection :result="wishList" />
   </div>
 </template>

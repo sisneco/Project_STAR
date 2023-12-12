@@ -1,3 +1,13 @@
+<script setup lang="ts">
+const props = defineProps({
+  result: {},
+});
+const { result } = props;
+
+console.log(result);
+console.log("Hello");
+</script>
+
 <template>
   <section
     class="border border-gray-200 w-full h-[200px] rounded-md p-4 flex flex-col gap-y-2"
@@ -19,7 +29,7 @@
       >https://online.ysroad.co.jp/shop/g/g2022000005708/</a
     >
     <p>
-      ずっと前から欲しかったロードバイクです。趣味に200万なんてって思うかもですが、次のレースで本気に勝ちに行きたいの...
+      {{ result }}
     </p>
   </section>
 </template>
