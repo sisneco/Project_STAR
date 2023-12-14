@@ -16,8 +16,6 @@ featchWishList();
 async function featchWishList() {
   const querySnapshot = await db.collection("items").get();
 
-  console.log("hoge");
-
   await querySnapshot.forEach((doc: any) => {
     let tmp = null;
     tmp = doc.data();
@@ -29,6 +27,6 @@ async function featchWishList() {
 
 <template>
   <div class="bg-white w-full p-8 flex flex-col gap-y-8">
-    <HomeWishSection :result="wishList" />
+    <HomeWishSection :wishList="wishList" />
   </div>
 </template>

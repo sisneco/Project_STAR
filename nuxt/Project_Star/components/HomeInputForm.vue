@@ -71,7 +71,7 @@ class Form {
 
 const currentForm: Ref<Form> = ref(
   new Form(
-    "wantItem",
+    "itemName",
     "今欲しいものを書き込んでみましょう！",
     INPUT_TYPE_TEXT,
     "欲しいもの",
@@ -182,12 +182,13 @@ function countParamNewLine(target: string): number {
 function btnNextAction() {
   // ボタンが非活性の場合は処理を実行しない
   if (isDisabledBtnNext.value) {
-    console.log(isDisabledBtnNext.value);
     return;
   }
 
   // 現在のkeyの添字を取得
   let index: number = nowFormArrayIndex.value;
+
+  console.log(inputText.value);
   // 入力値を保存
   formArray[index].value = inputText.value;
   index += 1;
@@ -289,7 +290,9 @@ async function btnRegisterAction() {
     addJsonParameter[formArray[i].key] = formArray[i].value;
   }
 
-  addJsonParameter.uid = userStore().uid;
+  // ユーザー名とユーザーIDを追加
+  addJsonParameter.userId = userStore().userId;
+  addJsonParameter.userName = userStore().userName;
 
   // 登録処理（ローディングモーダルで制御）
   loadingModal.value?.switchIsVisibleLoadingWindow();
@@ -339,7 +342,7 @@ function clickRatingStar(n: number) {
       el.style.color = color;
     }
 
-    inputText.value = String.toString(n);
+    inputText.value = n.toString();
   }
 }
 
