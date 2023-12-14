@@ -1,16 +1,23 @@
 <script setup lang="ts">
-const props = defineProps({
-  result: {},
-});
-const { result } = props;
+interface wishItem {
+  itemName: string;
+  priority: string;
+  itemUrl: string;
+  memo: string;
+  price: number;
+  uid: string;
+  id: string;
+}
 
-console.log(result);
-console.log("Hello");
+const props = defineProps({
+  wishList: Array<wishItem>,
+});
 </script>
 
 <template>
   <section
     class="border border-gray-200 w-full h-[200px] rounded-md p-4 flex flex-col gap-y-2"
+    v-for="wishItem in wishList"
   >
     <div class="flex items-end gap-x-2 text-xl">
       <h3 class="text-2xl font-serif">すし</h3>
@@ -18,18 +25,16 @@ console.log("Hello");
       <span v-for="n in 5"> ★ </span>
     </div>
     <div class="flex items-end text-4xl gap-x-1">
-      <p class="font-bold">DOGMA F</p>
-      <p class="text-3xl">¥450,000</p>
+      <p class="font-bold">{{ wishItem.itemName }}</p>
+      <p class="text-3xl">¥ {{ wishItem.price }}</p>
     </div>
     <a
-      href="https://online.ysroad.co.jp/shop/g/g2022000005708/"
+      :href="wishItem.itemUrl"
       target="_blank"
       rel="noopener noreferrer"
       class="text-blue-400"
-      >https://online.ysroad.co.jp/shop/g/g2022000005708/</a
-    >
-    <p>
-      {{ result }}
-    </p>
+      v-if="wishItem.itemUrl !== ''"
+      >{{ wishItem.itemUrl }}
+    </a>
   </section>
 </template>

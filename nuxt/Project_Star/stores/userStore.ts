@@ -32,7 +32,7 @@ export const userStore = defineStore("userStore", {
       this.userId = INITIAL_VALUE_USER_ID;
       this.partnerUid = INITIAL_VALUE_PARTNER_UID;
     },
-    fetchUserInfo(uid: string): void {
+    async fetchUserInfo(uid: string): Promise<void> {
       // USE IMPORT VALUES
       const nuxtApp = useNuxtApp();
       const db: any = nuxtApp.$db;
@@ -41,7 +41,7 @@ export const userStore = defineStore("userStore", {
 
       const query = db.collection("users").doc(this.uid);
 
-      const fetchResult = query.get(); // firebase.firestore.DocumentSnapshotのインスタンスを取得
+      const fetchResult = await query.get(); // firebase.firestore.DocumentSnapshotのインスタンスを取得
       if (fetchResult.exists) {
         const data: any = fetchResult.data();
 
