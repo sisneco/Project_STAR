@@ -6,6 +6,8 @@ interface wishItem {
   memo: string;
   price: number;
   uid: string;
+  userId: string;
+  userName: string;
   id: string;
 }
 
@@ -21,8 +23,8 @@ const props = defineProps({
   >
     <div class="flex items-end gap-x-2 text-xl">
       <h3 class="text-2xl font-serif">すし</h3>
-      <span class="text-xl text-gray-400">@sushi_kuitai </span>
-      <span v-for="n in 5"> ★ </span>
+      <span class="text-xl text-gray-400">@{{ wishItem.userId }} </span>
+      <span v-for="n in 5" class="text-yellow-300"> ★ </span>
     </div>
     <div class="flex items-end text-4xl gap-x-1">
       <p class="font-bold">{{ wishItem.itemName }}</p>
