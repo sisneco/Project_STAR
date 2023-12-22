@@ -24,7 +24,7 @@ module.exports = {
         },
         "slide-bottom": {
           "0%": {
-            transform: "translateY(-100px)",
+            transform: "translateY(-1200px)",
           },
           to: {
             transform: "translateY(0px)",

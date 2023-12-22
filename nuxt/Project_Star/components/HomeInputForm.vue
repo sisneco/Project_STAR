@@ -101,7 +101,7 @@ formArray.push(
 formArray.push(
   new Form(
     "itemUrl",
-    "商品URLがあれば書き込んで！",
+    "商品URLがあれば書き込んでください!",
     INPUT_TYPE_TEXT,
     "商品URL（任意）",
     false
@@ -371,19 +371,17 @@ const isDisabledBtnNext = computed(() => {
   <LoadingModal ref="loadingModal" />
 
   <div
-    class="fixed w-screen h-screen flex flex-col-reverse top-0 bg-white border-b border-gray-200 p-4 gap-y-4 lg:w-full lg:h-[150px] lg:flex-col lg:sticky"
+    class="fixed w-screen h-screen flex flex-col-reverse top-0 bg-white border-b border-gray-200 p-4 gap-y-4 lg:w-full lg:h-[175px] lg:flex-col lg:sticky"
     id="wrapper-textarea"
     :class="{ hidden: !isModalVisible }"
   >
     <div
-      class="w-full h-1/2 py-2 flex justify-end gap-x-2 pr-4 text-white font-bold font-sans border-b pb-4 items-end lg:items-center lg:py-0"
+      class="w-full h-1/2 py-2 flex justify-end gap-x-2 pr-4 text-white font-bold font-sans border-b pb-4 items-end lg:items-center lg:py-4"
     >
-      <div class="mr-auto flex text-gray-500 items-center">
+      <div class="mr-auto flex text-gray-500 items-center text-sm md:text-xl">
         <span class="hidden md:block">項目：</span>
-        <label class="text-sm md:text-lg pb-2 md:pb-0">{{
-          currentForm.labelText
-        }}</label>
-        <p class="text-sm md:text-base pl-2 pb-2 md:pb-0">
+        <label class="pb-2 md:pb-0">{{ currentForm.labelText }}</label>
+        <p class="pl-2 pb-2 md:pb-0">
           {{ nowFormArrayIndex + 1 }} /{{ formArray.length }}
         </p>
       </div>
@@ -393,9 +391,10 @@ const isDisabledBtnNext = computed(() => {
         v-if="nowFormArrayIndex !== 0"
       >
         戻る
+        <p class="text-xs">shift + Enter</p>
       </button>
       <button
-        class="w-24 md:w-32 rounded-full p-2 text-white font-bold font-sans"
+        class="w-24 md:w-40 rounded-full p-2 text-white font-bold font-sans"
         @click="btnCommonAction(getBtnNextType)"
         :class="{
           'bg-blue-300 pointer-events-none': isDisabledBtnNext,
@@ -403,11 +402,12 @@ const isDisabledBtnNext = computed(() => {
         }"
       >
         {{ btnNextName }}
+        <p class="text-xs">ctrl + Enter</p>
       </button>
     </div>
 
     <div
-      class="w-full h-1/2 flex flex-col gap-y-4 items-start lg:justify-center"
+      class="w-full h-1/2 flex flex-col gap-y-4 items-start lg:justify-center text-2xl"
       @keydown.ctrl.enter="btnCommonAction(getBtnNextType)"
       @keydown.shift.enter="btnCommonAction(BtnType.back)"
     >
@@ -420,7 +420,7 @@ const isDisabledBtnNext = computed(() => {
       <textarea
         v-model="inputText"
         :placeholder="currentForm.placeholderText"
-        class="w-full resize-none outline-none text-xl overflow-hidden"
+        class="w-full resize-none outline-none overflow-hidden"
         id="textarea"
         @input="autoResizeTextArea($event)"
         v-if="currentForm.inputType === INPUT_TYPE_TEXTAREA"
@@ -431,7 +431,7 @@ const isDisabledBtnNext = computed(() => {
         id="number"
         :placeholder="currentForm.placeholderText"
         onkeydown="return event.keyCode !== 69"
-        class="w-full resize-none outline-none text-xl overflow-hidden"
+        class="w-full resize-none outline-none overflow-hidden"
         v-else-if="currentForm.inputType === INPUT_TYPE_NUMBER"
       />
       <input
@@ -440,7 +440,7 @@ const isDisabledBtnNext = computed(() => {
         id="text"
         :placeholder="currentForm.placeholderText"
         autocomplete="off"
-        class="w-full outline-none text-xl"
+        class="w-full outline-none"
         v-else-if="currentForm.inputType === INPUT_TYPE_TEXT"
       />
       <div

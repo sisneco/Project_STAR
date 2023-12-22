@@ -14,21 +14,30 @@ interface wishItem {
 const props = defineProps({
   wishList: Array<wishItem>,
 });
+
+const confirmModal = ref();
+
+// METHODS
+function btnTrashAction(itemId: string) {
+  confirmModal.value.switchIsVisibleLoadingWindow(itemId);
+}
 </script>
 
 <template>
   <section
-    class="border border-gray-200 w-full h-[200px] rounded-md p-4 flex flex-col gap-y-2"
+    class="border border-gray-200 w-full h-[200px] rounded-md p-4 flex flex-col gap-y-2 relative"
     v-for="wishItem in wishList"
   >
-    <div class="flex items-end gap-x-2 text-xl">
+    <div class="flex items-start gap-x-2 text-xl">
       <h3 class="text-2xl font-serif">すし</h3>
       <span class="text-xl text-gray-400">@{{ wishItem.userId }} </span>
-      <span v-for="n in 5" class="text-yellow-300"> ★ </span>
+      <span v-for="n in parseInt(wishItem.priority)" class="text-yellow-300">
+        ★
+      </span>
     </div>
-    <div class="flex items-end text-4xl gap-x-1">
-      <p class="font-bold">{{ wishItem.itemName }}</p>
-      <p class="text-3xl">¥ {{ wishItem.price }}</p>
+    <div class="flex flex-col">
+      <p class="text-3xl">{{ wishItem.itemName }}</p>
+      <p class="text-2xl">¥ {{ wishItem.price.toLocaleString() }}</p>
     </div>
     <a
       :href="wishItem.itemUrl"
@@ -38,5 +47,18 @@ const props = defineProps({
       v-if="wishItem.itemUrl !== ''"
       >{{ wishItem.itemUrl }}
     </a>
+    <div class="flex h-6 w-full absolute bottom-4 left-4 gap-x-24">
+      <font-awesome-icon icon="fa-solid fa-check" class="text-green-400" />
+      <font-awesome-icon
+        icon="fa-solid fa-rotate-right"
+        class="text-yellow-200"
+      />
+      <font-awesome-icon
+        icon="fa-solid fa-trash"
+        class="text-gray-400"
+        @click="btnTrashAction(wishItem.id)"
+      />
+    </div>
   </section>
+  <ConfirmModal ref="confirmModal" />
 </template>
