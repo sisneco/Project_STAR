@@ -14,13 +14,16 @@ featchWishList();
  * 欲しいものリストを取得
  */
 async function featchWishList() {
-  const querySnapshot = await db.collection("items").get();
-
-  await querySnapshot.forEach((doc: any) => {
-    let tmp = null;
-    tmp = doc.data();
-    tmp.id = doc.id;
-    wishList.value.push(tmp);
+  console.log("hofe");
+  await db.collection("items").onSnapshot((querySnapshot: any) => {
+    wishList.value = new Array();
+    querySnapshot.forEach((doc: any) => {
+      console.log(doc);
+      let tmp = null;
+      tmp = doc.data();
+      tmp.id = doc.id;
+      wishList.value.push(tmp);
+    });
   });
 }
 </script>
