@@ -15,11 +15,11 @@ const props = defineProps({
   wishList: Array<wishItem>,
 });
 
-const confirmModal = ref();
+const deleteModal = ref();
 
 // METHODS
 function btnTrashAction(itemId: string) {
-  confirmModal.value.switchIsVisibleLoadingWindow(itemId);
+  deleteModal.value.switchIsVisibleLoadingWindow(itemId);
 }
 </script>
 
@@ -55,10 +55,10 @@ function btnTrashAction(itemId: string) {
       />
       <font-awesome-icon
         icon="fa-solid fa-trash"
-        class="text-gray-400"
+        class="text-gray-400 cursor-pointer"
         @click="btnTrashAction(wishItem.id)"
       />
     </div>
   </section>
-  <ConfirmModal ref="confirmModal" />
+  <DeleteModal ref="deleteModal" />
 </template>
