@@ -23,7 +23,7 @@ definePageMeta({
       <HomeInputForm />
       <HomeWishContainer />
     </div>
-    <div class="hidden md:flex flex-col w-2/6 gap-y-6">
+    <div class="hidden md:flex flex-col w-2/6 gap-y-6 sticky">
       <HomeMyInfomation />
       <HomePartnerInfomation />
     </div>

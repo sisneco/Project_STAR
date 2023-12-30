@@ -1,4 +1,8 @@
 <script setup lang="ts">
+// USE IMPORT VALUES
+const nuxtApp = useNuxtApp();
+const db: any = nuxtApp.$db;
+
 interface wishItem {
   itemName: string;
   priority: string;
@@ -9,6 +13,7 @@ interface wishItem {
   userId: string;
   userName: string;
   id: string;
+  isBuy: boolean;
 }
 
 const props = defineProps({
@@ -18,6 +23,20 @@ const props = defineProps({
 const deleteModal = ref();
 
 // METHODS
+async function btnBuyAction(itemId: string) {
+  const userRef = db.collection("items").doc(itemId);
+  await userRef.update({
+    isBuy: true,
+  });
+}
+
+async function btnResetBuyAction(itemId: string) {
+  const userRef = db.collection("items").doc(itemId);
+  await userRef.update({
+    isBuy: false,
+  });
+}
+
 function btnTrashAction(itemId: string) {
   deleteModal.value.switchIsVisibleLoadingWindow(itemId);
 }
@@ -25,7 +44,7 @@ function btnTrashAction(itemId: string) {
 
 <template>
   <section
-    class="border border-gray-200 w-full h-[200px] rounded-md p-4 flex flex-col gap-y-2 relative"
+    class="border border-gray-200 w-full rounded-md p-4 flex flex-col gap-y-3 relative text-gray-500"
     v-for="wishItem in wishList"
   >
     <div class="flex items-start gap-x-2 text-xl">
@@ -35,10 +54,9 @@ function btnTrashAction(itemId: string) {
         ★
       </span>
     </div>
-    <div class="flex flex-col">
-      <p class="text-3xl">{{ wishItem.itemName }}</p>
-      <p class="text-2xl">¥ {{ wishItem.price.toLocaleString() }}</p>
-    </div>
+    <p class="text-3xl font-sans">{{ wishItem.itemName }}</p>
+    <p class="text-2xl">¥ {{ wishItem.price.toLocaleString() }}</p>
+
     <a
       :href="wishItem.itemUrl"
       target="_blank"
@@ -47,18 +65,33 @@ function btnTrashAction(itemId: string) {
       v-if="wishItem.itemUrl !== ''"
       >{{ wishItem.itemUrl }}
     </a>
-    <div class="flex h-6 w-full absolute bottom-4 left-4 gap-x-24">
-      <font-awesome-icon icon="fa-solid fa-check" class="text-green-400" />
+    <div class="flex h-6 w-full gap-x-24 text-gray-400" id="icon-box">
       <font-awesome-icon
-        icon="fa-solid fa-rotate-right"
-        class="text-yellow-200"
+        icon="fa-solid fa-face-smile-wink"
+        class="cursor-pointer"
+        v-if="wishItem.isBuy"
+        @click="btnResetBuyAction(wishItem.id)"
       />
       <font-awesome-icon
+        icon="fa-solid fa-check"
+        class="cursor-pointer"
+        v-else
+        @click="btnBuyAction(wishItem.id)"
+      />
+
+      <font-awesome-icon icon="fa-solid fa-rotate-right" />
+      <font-awesome-icon
         icon="fa-solid fa-trash"
-        class="text-gray-400 cursor-pointer"
+        class="cursor-pointer"
         @click="btnTrashAction(wishItem.id)"
       />
     </div>
   </section>
   <DeleteModal ref="deleteModal" />
 </template>
+
+<style scoped>
+#icon-box > svg {
+  width: 21px;
+}
+</style>
