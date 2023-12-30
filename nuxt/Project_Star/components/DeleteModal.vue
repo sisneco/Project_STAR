@@ -16,6 +16,7 @@ const db: any = nuxtApp.$db;
 function switchIsVisibleLoadingWindow(param: string): void {
   isVisibleLoadingWindow.value = !isVisibleLoadingWindow.value;
 
+  //TODO スクロール禁止　解除実装（別メソッドで分割）
   function disableScroll(event: any) {
     event.preventDefault();
   }
