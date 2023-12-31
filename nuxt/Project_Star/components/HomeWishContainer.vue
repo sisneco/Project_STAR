@@ -14,11 +14,9 @@ featchWishList();
  * 欲しいものリストを取得
  */
 async function featchWishList() {
-  console.log("hofe");
   await db.collection("items").onSnapshot((querySnapshot: any) => {
     wishList.value = new Array();
     querySnapshot.forEach((doc: any) => {
-      console.log(doc);
       let tmp = null;
       tmp = doc.data();
       tmp.id = doc.id;

@@ -278,6 +278,11 @@ function btnOpenModalAction() {
  * 登録ボタンクリック時の処理
  */
 async function btnRegisterAction() {
+  // 現在のkeyの添字を取得
+  let index: number = nowFormArrayIndex.value;
+
+  formArray[index].value = inputText.value;
+
   const db: any = nuxtApp.$db;
 
   interface addJsonParameterFormat {
@@ -312,6 +317,8 @@ function resetFormStatus(): void {
   currentForm.value = formArray[0];
 
   inputText.value = currentForm.value.value;
+
+  isModalVisible.value = false;
 }
 
 /**
@@ -373,7 +380,7 @@ const isDisabledBtnNext = computed(() => {
   <LoadingModal ref="loadingModal" />
 
   <div
-    class="fixed w-screen h-screen flex flex-col-reverse top-0 bg-white border-b border-gray-200 p-4 gap-y-4 lg:w-full lg:h-[175px] lg:flex-col lg:sticky lg:z-10"
+    class="fixed w-screen h-screen flex flex-col-reverse top-0 left-0 bg-white border-b border-gray-200 p-4 gap-y-4 lg:w-full lg:h-[175px] lg:flex-col lg:sticky z-50"
     id="wrapper-textarea"
     :class="{ hidden: !isModalVisible }"
   >
@@ -383,7 +390,7 @@ const isDisabledBtnNext = computed(() => {
       <div class="mr-auto flex text-gray-500 items-center text-sm md:text-xl">
         <span class="hidden md:block">項目：</span>
         <label class="pb-2 md:pb-0">{{ currentForm.labelText }}</label>
-        <p class="pl-2 pb-2 md:pb-0">
+        <p class="pl-2 pb-2 md:pb-0" v-if="!isMaxWidth768()">
           {{ nowFormArrayIndex + 1 }} /{{ formArray.length }}
         </p>
       </div>
@@ -393,7 +400,7 @@ const isDisabledBtnNext = computed(() => {
         v-if="nowFormArrayIndex !== 0"
       >
         戻る
-        <p class="text-xs">shift + Enter</p>
+        <p class="text-xs" v-if="!isMaxWidth768()">shift + Enter</p>
       </button>
       <button
         class="w-24 md:w-40 rounded-full p-2 text-white font-bold font-sans"
@@ -404,17 +411,17 @@ const isDisabledBtnNext = computed(() => {
         }"
       >
         {{ btnNextName }}
-        <p class="text-xs">ctrl + Enter</p>
+        <p class="text-xs" v-if="!isMaxWidth768()">ctrl + Enter</p>
       </button>
     </div>
 
     <div
-      class="w-full h-1/2 flex flex-col gap-y-4 items-start lg:justify-center text-2xl"
+      class="w-full h-1/2 flex flex-col gap-y-4 items-start lg:justify-center md:text-2xl"
       @keydown.ctrl.enter="btnCommonAction(getBtnNextType)"
       @keydown.shift.enter="btnCommonAction(BtnType.back)"
     >
       <span
-        class="lg:hidden hover:"
+        class="text-4xl lg:hidden hover:"
         :class="{ hidden: !isModalVisible }"
         @click="btnCommonModalAction()"
         >✗</span
@@ -464,7 +471,7 @@ const isDisabledBtnNext = computed(() => {
   </div>
 
   <div
-    class="h-16 w-16 bg-orange-200 rounded-full fixed bottom-4 right-4 lg:hidden flex justify-center items-center hover:cursor-pointer"
+    class="h-16 w-16 bg-orange-200 rounded-full fixed bottom-4 right-4 lg:hidden flex justify-center items-center hover:cursor-pointer z-10"
     @click="btnOpenModalAction()"
     :class="{ hidden: isModalVisible }"
   >

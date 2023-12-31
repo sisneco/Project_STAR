@@ -38,7 +38,7 @@ const pageTag: Ref<number> = ref(PAGE_TAG_INPUT_INITIALIZE_DATA);
 // form parameter
 const userId: Ref<string> = ref("");
 const userName: Ref<string> = ref("");
-const partnerId: Ref<string> = ref("");
+const partnerUserId: Ref<string> = ref("");
 
 // USE IMPORT VALUES
 const nuxtApp = useNuxtApp();
@@ -98,13 +98,13 @@ async function btnRegisterAction() {
   const db: any = nuxtApp.$db;
 
   interface addJsonParameterFormat {
-    partnerUId: string;
+    partnerUserId: string;
     userId: string;
     userName: string;
   }
 
   const addJsonParameter: addJsonParameterFormat = {
-    partnerUId: partnerId.value,
+    partnerUserId: partnerUserId.value,
     userId: userId.value,
     userName: userName.value,
   };
@@ -234,10 +234,10 @@ const isVisibleBtnBack = computed(() => {
 });
 
 const displayPartnerId = computed(() => {
-  if (partnerId.value === "") {
+  if (partnerUserId.value === "") {
     return "設定なし";
   }
-  return partnerId.value;
+  return partnerUserId.value;
 });
 
 /**
@@ -250,7 +250,7 @@ const isDisabledFormButton = computed(() => {
   }
 
   if (pageTag.value == PAGE_TAG_INPUT_PARTNER_DATA) {
-    return hasValidErrorUserId(partnerId.value);
+    return hasValidErrorUserId(partnerUserId.value);
   }
 
   return false;
@@ -330,7 +330,7 @@ const isDisabledFormButton = computed(() => {
           id="userId"
           autocomplete="off"
           placeholder="whatner"
-          v-model="partnerId"
+          v-model="partnerUserId"
           class="w-full outline-none text-lg border p-4"
         />
       </div>

@@ -23,8 +23,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   const result: any = await initializeAuth;
 
-  console.log(result);
-
   // No Login
   if (result === null) {
     if (redirectPageRejects(to, from, pagePath.login)) {
@@ -35,7 +33,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   if (!userStore().isSettingStoreValue) {
-    userStore().fetchUserInfo(result.uid);
+    await userStore().fetchUserInfo(result.uid);
   }
 
   if (!userStore().isSettingStoreValue) {

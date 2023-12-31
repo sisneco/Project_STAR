@@ -57,6 +57,8 @@ function login() {
     .signInWithEmailAndPassword(email.value, password.value)
     .then((result) => {
       userStore().setUid(result.user.uid);
+
+      console.log("hoge");
       // success
       return navigateTo({
         path: "/home",
