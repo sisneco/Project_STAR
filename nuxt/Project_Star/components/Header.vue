@@ -19,14 +19,8 @@ function logOut(): void {
   >
     <h1 class="text-white text-5xl font-oswald">Wh'Star</h1>
 
-    <img
-      src="@/assets/img/testIcon.jpg"
-      alt=""
-      class="h-full object-cover rounded-full ml-auto"
-    />
-
     <button
-      class="w-32 p-2 rounded-full text-blue-500 font-bold font-sans border border-blue-500"
+      class="w-32 p-2 rounded-full text-blue-500 font-bold font-sans border border-blue-500 ml-auto"
       @click="logOut()"
       v-if="userStore().isSettingStoreValue"
     >

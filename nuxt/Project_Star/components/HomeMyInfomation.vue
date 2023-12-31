@@ -1,3 +1,3 @@
 <template>
-  <HomeCommonInfomation />
+  <HomeCommonInfomation :userId="userStore().userId" />
 </template>

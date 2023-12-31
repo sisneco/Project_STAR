@@ -47,12 +47,18 @@ function btnTrashAction(itemId: string) {
     class="border border-gray-200 w-full rounded-md p-4 flex flex-col gap-y-3 relative text-gray-500"
     v-for="wishItem in wishList"
   >
-    <div class="flex items-start gap-x-2 text-xl">
-      <h3 class="text-2xl font-serif">すし</h3>
-      <span class="text-xl text-gray-400">@{{ wishItem.userId }} </span>
-      <span v-for="n in parseInt(wishItem.priority)" class="text-yellow-300">
-        ★
-      </span>
+    <div class="flex flex-col md:flex-row gap-x-2 text-xl">
+      <div class="flex items-center gap-x-2">
+        <h3 class="text-2xl font-serif">すし</h3>
+        <span class="text-base md:text-xl text-gray-400"
+          >@{{ wishItem.userId }}
+        </span>
+      </div>
+      <p>
+        <span v-for="n in parseInt(wishItem.priority)" class="text-yellow-300">
+          ★
+        </span>
+      </p>
     </div>
     <p class="text-3xl font-sans">{{ wishItem.itemName }}</p>
     <p class="text-2xl">¥ {{ wishItem.price.toLocaleString() }}</p>
@@ -65,7 +71,11 @@ function btnTrashAction(itemId: string) {
       v-if="wishItem.itemUrl !== ''"
       >{{ wishItem.itemUrl }}
     </a>
-    <div class="flex h-6 w-full gap-x-24 text-gray-400" id="icon-box">
+    <p>{{ wishItem.memo }}</p>
+    <div
+      class="flex h-6 w-full gap-x-8 md:gap-x-24 text-gray-400"
+      id="icon-box"
+    >
       <font-awesome-icon
         icon="fa-solid fa-face-smile-wink"
         class="cursor-pointer"

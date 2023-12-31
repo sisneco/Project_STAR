@@ -4,14 +4,14 @@ import { defineStore } from "pinia";
 const INITIAL_VALUE_UID = "";
 const INITIAL_VALUE_USER_ID = "";
 const INITIAL_VALUE_USER_NAME = "";
-const INITIAL_VALUE_PARTNER_UID = "";
+const INITIAL_VALUE_PARTNER_USER_ID = "";
 
 export const userStore = defineStore("userStore", {
   state: () => ({
     uid: INITIAL_VALUE_UID, // firebase auth Id
     userId: INITIAL_VALUE_UID, // UserID(add user)
     userName: INITIAL_VALUE_USER_NAME, // UserName(add user)
-    partnerUid: INITIAL_VALUE_PARTNER_UID, // partner firebase auth ID
+    partnerUserId: INITIAL_VALUE_PARTNER_USER_ID, // partner userId
   }),
   getters: {
     isSettingStoreValue(): boolean {
@@ -30,7 +30,7 @@ export const userStore = defineStore("userStore", {
     initialStore(): void {
       this.uid = INITIAL_VALUE_UID;
       this.userId = INITIAL_VALUE_USER_ID;
-      this.partnerUid = INITIAL_VALUE_PARTNER_UID;
+      this.partnerUserId = INITIAL_VALUE_PARTNER_USER_ID;
     },
     async fetchUserInfo(uid: string): Promise<void> {
       // USE IMPORT VALUES
@@ -47,7 +47,7 @@ export const userStore = defineStore("userStore", {
 
         this.userId = data.userId;
         this.userName = data.userName;
-        this.partnerUid = data.partnerUid;
+        this.partnerUserId = data.partnerUserId;
       }
     },
   },
