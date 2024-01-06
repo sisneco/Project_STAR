@@ -42,6 +42,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
     return navigateTo(pagePath.initialize);
   }
+
+  if (to.path !== pagePath.home) {
+    return navigateTo(pagePath.home);
+  }
 });
 
 const redirectPageRejects = (to: any, from: any, path: pagePath) => {

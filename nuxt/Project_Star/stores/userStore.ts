@@ -5,6 +5,7 @@ const INITIAL_VALUE_UID = "";
 const INITIAL_VALUE_USER_ID = "";
 const INITIAL_VALUE_USER_NAME = "";
 const INITIAL_VALUE_PARTNER_USER_ID = "";
+const INITIAL_VALUE_PAETNER_USER_NAME = "";
 
 export const userStore = defineStore("userStore", {
   state: () => ({
@@ -12,11 +13,12 @@ export const userStore = defineStore("userStore", {
     userId: INITIAL_VALUE_UID, // UserID(add user)
     userName: INITIAL_VALUE_USER_NAME, // UserName(add user)
     partnerUserId: INITIAL_VALUE_PARTNER_USER_ID, // partner userId
+    partnerUserName: INITIAL_VALUE_PAETNER_USER_NAME, // partner userName
   }),
   getters: {
     isSettingStoreValue(): boolean {
       return (
-        this.uid !== INITIAL_VALUE_UID && this.uid !== INITIAL_VALUE_USER_ID
+        this.uid !== INITIAL_VALUE_UID && this.userId !== INITIAL_VALUE_USER_ID
       );
     },
   },
@@ -49,6 +51,17 @@ export const userStore = defineStore("userStore", {
         this.userName = data.userName;
         this.partnerUserId = data.partnerUserId;
       }
+
+      const querySnapshot = await db
+        .collection("users")
+        .where("userId", "==", this.partnerUserId)
+        .get();
+
+      console.log("hoge");
+
+      querySnapshot.forEach((doc: any) => {
+        this.partnerUserName = doc.data().userName;
+      });
     },
   },
 });

@@ -9,6 +9,7 @@ featchUserInfo();
 
 const props = defineProps({
   userId: String,
+  userName: String,
 });
 
 // METHODS
@@ -16,16 +17,12 @@ const props = defineProps({
  * 欲しいものリストを取得
  */
 async function featchUserInfo() {
-  console.log(props.userId);
-  console.log(userStore().userId);
-
   await db
     .collection("items")
     .where("userId", "==", props.userId)
     .onSnapshot((querySnapshot: any) => {
       userInfoItem.value = new Array();
       querySnapshot.forEach((doc: any) => {
-        console.log(doc);
         let tmp = null;
         tmp = doc.data();
         tmp.id = doc.id;
@@ -56,7 +53,11 @@ const getBoughtMoney = computed(() => {
   <section
     class="hidden md:flex bg-orange-200 w-full h-[500px] p-4 top-0 flex-col gap-y-6 rounded-xl"
   >
-    <h2 class="text-xl font-bold">すし</h2>
+    <div class="flex items-center gap-x-2">
+      <h2 class="text-xl font-bold">{{ userName }}</h2>
+      <span class="text-base md:text-xl text-gray-600">@{{ userId }} </span>
+    </div>
+
     <section class="w-full h-40 flex gap-x-2">
       <div class="bg-white w-1/3 h-full flex flex-col items-center p-4 gap-y-4">
         <h3 class="text-xl">欲しい数</h3>

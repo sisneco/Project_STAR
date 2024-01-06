@@ -14,6 +14,13 @@ function logOut(): void {
 </script>
 
 <template>
+  <button
+    class="w-32 p-2 rounded-full text-blue-500 font-bold font-sans border border-blue-500 ml-auto hidden md:block md:fixed bottom-4 left-4 md:w-64 md:text-2xl"
+    @click="logOut()"
+    v-if="userStore().isSettingStoreValue"
+  >
+    ログアウト
+  </button>
   <header
     class="sticky top-0 h-24 bg-neutral-800 font-notojp flex items-center p-4 gap-x-4 lg:hidden z-40"
   >
