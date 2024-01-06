@@ -34,6 +34,8 @@ enum BtnType {
 
 // VALUES
 const pageTag: Ref<number> = ref(PAGE_TAG_INPUT_INITIALIZE_DATA);
+const hasErrorInputData: Ref<boolean> = ref(false);
+const goErrorAnimation: Ref<boolean> = ref(false);
 
 // form parameter
 const userId: Ref<string> = ref("");
@@ -42,15 +44,55 @@ const partnerUserId: Ref<string> = ref("");
 
 // USE IMPORT VALUES
 const nuxtApp = useNuxtApp();
+const db: any = nuxtApp.$db;
+
 const loadingModal = ref<InstanceType<typeof LoadingModal> | null>(null);
 
 // METHODS
-function btnNextAction() {
+async function btnNextAction() {
+  // 初期化
+  goErrorAnimation.value = false;
+
+  if (pageTag.value === PAGE_TAG_INPUT_INITIALIZE_DATA) {
+    // 登録チェック
+    if (await userIdExists(userId.value)) {
+      hasErrorInputData.value = true;
+      goErrorAnimation.value = true;
+      return;
+    }
+
+    hasErrorInputData.value = false;
+  }
+
+  if (pageTag.value === PAGE_TAG_INPUT_PARTNER_DATA) {
+    // 登録チェック
+    if (!(await userIdExists(partnerUserId.value))) {
+      hasErrorInputData.value = true;
+      goErrorAnimation.value = true;
+      return;
+    }
+
+    hasErrorInputData.value = false;
+  }
+
   ++pageTag.value;
 }
 
 function btnBackAction() {
   --pageTag.value;
+}
+
+// METHODS
+/**
+ * ユーザーIDが存在するか判定
+ */
+async function userIdExists(id: string) {
+  const querySnapshot = await db
+    .collection("users")
+    .where("userId", "==", id)
+    .get();
+
+  return !querySnapshot.empty;
 }
 
 /**
@@ -115,7 +157,7 @@ async function btnRegisterAction() {
   loadingModal.value?.switchIsVisibleLoadingWindow();
 
   // 最終ページではない場合、インクリメント
-  if (pageTag.value !== PAGE_TAG_CONFIRM_PARTNER_DATA) {
+  if (pageTag.value !== PAGE_TAG_COMPLATE_PARTNER_DATA) {
     ++pageTag.value;
   }
 }
@@ -167,6 +209,16 @@ const formColumnText = computed(() => {
   }
 
   return "CONFIRM";
+});
+
+const formErrorText = computed(() => {
+  if (pageTag.value === PAGE_TAG_INPUT_INITIALIZE_DATA) {
+    return "同じユーザーIDが登録されています";
+  }
+
+  if (pageTag.value === PAGE_TAG_INPUT_PARTNER_DATA) {
+    return "ユーザーIDが存在しません";
+  }
 });
 
 const formHelpText = computed(() => {
@@ -265,7 +317,14 @@ const isDisabledFormButton = computed(() => {
       class="w-full md:min-w-[400px] max-w-[550px] h-[600px] md:h-[750px] bg-white rounded-lg px-8 py-4 md:py-12 font-notojp flex flex-col gap-y-4"
     >
       <h2 class="text-4xl md:text-5xl font-oswald">{{ formColumnText }}</h2>
-      <p>{{ formHelpText }}</p>
+      <p class="text-xs md:text-base">{{ formHelpText }}</p>
+      <p
+        class="text-sm md:text-base text-red-500 font-sans font-bold"
+        :class="{ 'animate-vibrate-1': goErrorAnimation }"
+        v-show="hasErrorInputData"
+      >
+        {{ formErrorText }}
+      </p>
       <div
         v-if="pageTag == PAGE_TAG_INPUT_INITIALIZE_DATA"
         class="flex flex-col gap-y-4"

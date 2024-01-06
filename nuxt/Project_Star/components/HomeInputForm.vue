@@ -380,7 +380,7 @@ const isDisabledBtnNext = computed(() => {
   <LoadingModal ref="loadingModal" />
 
   <div
-    class="fixed w-screen h-screen flex flex-col-reverse top-0 left-0 bg-white border-b border-gray-200 p-4 gap-y-4 lg:w-full lg:h-[175px] lg:flex-col lg:sticky z-50"
+    class="fixed w-screen h-screen flex flex-col-reverse top-0 left-0 bg-white border-b border-gray-200 p-4 gap-y-4 lg:w-full lg:h-[175px] lg:flex-col lg:sticky z-40"
     id="wrapper-textarea"
     :class="{ hidden: !isModalVisible }"
   >

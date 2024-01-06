@@ -11,6 +11,8 @@ definePageMeta({
   middleware: ["redirect"],
 });
 
+console.log(userStore().isSettingStoreValue);
+
 // VALUES
 const email = ref();
 const password = ref();
