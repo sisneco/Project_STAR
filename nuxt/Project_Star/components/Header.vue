@@ -15,7 +15,7 @@ function logOut(): void {
 
 <template>
   <button
-    class="w-32 p-2 rounded-full text-blue-500 font-bold font-sans border border-blue-500 ml-auto hidden md:block md:fixed bottom-4 left-4 md:w-64 md:text-2xl"
+    class="w-32 p-2 rounded-full text-blue-500 font-bold font-sans border border-blue-500 ml-auto hidden lg:block md:fixed bottom-4 left-4 md:w-64 md:text-2xl"
     @click="logOut()"
     v-if="userStore().isSettingStoreValue"
   >

@@ -49,13 +49,15 @@ function getUserName(userId: string) {
 
 <template>
   <section
-    class="border border-gray-200 w-full rounded-md p-4 flex flex-col gap-y-3 relative text-gray-500"
+    class="border border-gray-200 w-full rounded-md p-4 flex flex-col gap-y-3 relative text-gray-500 overflow-hidden text-nowrap"
     :class="{ 'bg-green-100': wishItem.isBuy }"
     v-for="wishItem in wishList"
   >
     <div class="flex flex-col md:flex-row gap-x-2 text-xl">
       <div class="flex items-center gap-x-2">
-        <h3 class="text-2xl font-serif">{{ getUserName(wishItem.userId) }}</h3>
+        <h3 class="md:text-2xl font-serif">
+          {{ getUserName(wishItem.userId) }}
+        </h3>
         <span class="text-base md:text-xl text-gray-400"
           >@{{ wishItem.userId }}
         </span>
@@ -84,7 +86,7 @@ function getUserName(userId: string) {
       v-if="wishItem.userId === userStore().userId"
     >
       <font-awesome-icon
-        icon="fa-solid fa-face-smile-wink"
+        icon="fa-solid fa-shopping-bag"
         class="cursor-pointer"
         v-if="wishItem.isBuy"
         @click="btnResetBuyAction(wishItem.id)"
