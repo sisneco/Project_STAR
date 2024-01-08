@@ -162,6 +162,10 @@ async function btnRegisterAction() {
   }
 }
 
+function btnNotRegisterAction() {
+  pageTag.value = PAGE_TAG_COMPLATE_INITIALIZE_DATA;
+}
+
 /**
  * 最終ページのボタンクリック時の処理
  */
@@ -186,8 +190,12 @@ function btnCommonAction(btnType: BtnType): void {
     case BtnType.register:
       btnRegisterAction();
       break;
+    case BtnType.notRegister:
+      btnNotRegisterAction();
+      break;
     case BtnType.finish:
       btnFinishAction();
+      break;
   }
 }
 

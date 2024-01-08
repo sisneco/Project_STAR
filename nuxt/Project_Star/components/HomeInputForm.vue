@@ -301,6 +301,9 @@ async function btnRegisterAction() {
 
   addJsonParameter.isBuy = false;
 
+  // 現在時刻も追加
+  addJsonParameter.createdAt = new Date();
+
   // 登録処理（ローディングモーダルで制御）
   loadingModal.value?.switchIsVisibleLoadingWindow();
   db.addJsonParameter = await db.collection("items").add(addJsonParameter);
@@ -318,7 +321,9 @@ function resetFormStatus(): void {
 
   inputText.value = currentForm.value.value;
 
-  isModalVisible.value = false;
+  if (isMaxWidth768()) {
+    isModalVisible.value = false;
+  }
 }
 
 /**

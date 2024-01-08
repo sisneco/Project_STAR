@@ -25,6 +25,10 @@ async function featchWishList() {
         tmp.id = doc.id;
         wishList.value.push(tmp);
       });
+
+      if (wishList.value.length) {
+        wishList.value.sort((a, b) => b["createdAt"] - a["createdAt"]);
+      }
     });
 }
 </script>
