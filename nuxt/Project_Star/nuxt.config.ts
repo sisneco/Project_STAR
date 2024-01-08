@@ -1,7 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  ssr: false,
+  routeRules: {
+    "/": { prerender: false },
+    "/login": { ssr: true },
+    "/home": { ssr: false },
+  },
   modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt"],
 
   app: {
